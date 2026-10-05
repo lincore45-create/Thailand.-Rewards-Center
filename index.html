@@ -13,7 +13,8 @@ main{max-width:480px;margin:0 auto}
 body.off .bg{filter:grayscale(1)}
 header{padding:calc(env(safe-area-inset-top,0px) + 18px) 18px 56px}
 header h1{font-size:26px;margin:6px 0 4px}header p{font-size:14px}
-.logo{font-weight:800;font-size:26px;letter-spacing:-1px}
+img.logo{height:26px;width:auto;display:block}
+.login img.logo{height:34px;margin:0 auto}
 .top{display:flex;justify-content:space-between;align-items:center}
 .pill{background:#fff;border-radius:30px;padding:6px 14px 6px 8px;display:flex;align-items:center;gap:8px;font-weight:700;font-size:20px}
 .pill small{display:block;font-size:11px;font-weight:400;color:var(--mut);margin-top:-3px}
@@ -49,11 +50,15 @@ h2{font-size:17px}.mut{color:var(--mut);font-size:13px}
 .tot b{display:block;font-size:17px}
 .req{display:flex;justify-content:space-between;gap:8px;padding:10px 0;border-top:1px solid #eee;font-size:14px}
 .st{border-radius:20px;padding:2px 10px;font-size:12px;font-weight:700;background:#eee;height:fit-content;white-space:nowrap}
-.st.Новая{background:#e0ecff;color:#1d4ed8}.st.В\ работе{background:#fff1c2;color:#8a6100}.st.Выполнена{background:#d9f5e3;color:var(--ok)}.st.Отклонена{background:#fde0e4;color:var(--bad)}
+.st.new{background:#e0ecff;color:#1d4ed8}.st.work{background:#fff1c2;color:#8a6100}.st.done{background:#d9f5e3;color:var(--ok)}.st.rej{background:#fde0e4;color:var(--bad)}
 .warn{background:#ffe3e6;border-radius:20px;margin:12px;padding:16px}
 .warn .btn{background:var(--bad);color:#fff}
 .off .btn:not(.keep),.off .btn:not(.keep):disabled{background:#d9d9de;color:#888;pointer-events:none}
 .off .today{background:#eee}.off .col .t i{background:#bbb}.off .gift{filter:grayscale(1)}.off .coin{filter:grayscale(1)}.off .bar>i,.off .bar>b.on{background:#bbb;border-color:#bbb}
+.lang{display:flex;gap:2px;background:#ffffffcc;border-radius:20px;padding:3px}
+.lang button{border:0;background:none;border-radius:16px;padding:6px 11px;font-weight:700;font-size:12px;font-family:inherit;color:var(--ink);cursor:pointer}
+.lang button.on{background:var(--ink);color:#fff}
+.login .lang{width:fit-content;margin:0 auto 14px}
 nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e5e5e5;display:flex;justify-content:space-around;padding:8px 0 calc(env(safe-area-inset-bottom,0px) + 8px)}
 nav a{flex:1;text-align:center;font-size:12px;color:#444;text-decoration:none;cursor:pointer}
 nav a span{display:block;font-size:22px}nav a.on{color:#d49a00;font-weight:700}
@@ -72,16 +77,78 @@ nav a span{display:block;font-size:22px}nav a.on{color:#d49a00;font-weight:700}
 <div class="bg"></div>
 <main id="app"></main>
 <script>
-const API = 'https://script.google.com/macros/s/AKfycbwypLTvqQLXNeJJs1cRJ_16usJjJhI4I4iJnejrVxpFa1IfCm-DTMVeX5QvRgqMa7WF6A/exec';           // URL развёрнутого Apps Script
+const API = 'https://script.google.com/macros/s/AKfycbwypLTvqQLXNeJJs1cRJ_16usJjJhI4I4iJnejrVxpFa1IfCm-DTMVeX5QvRgqMa7WF6A/exec';
 const PDL_URL = '#', TAXSEE_URL = '#';              // ссылки для кнопок «Загрузить PDL» и «Назад в Taxsee Driver»
 
-let sess = null, S = null, tab = 'home', busy = false;
+const ls = { get: k => { try { return localStorage.getItem(k) } catch (e) { return null } }, set: (k, v) => { try { localStorage.setItem(k, v) } catch (e) {} }, del: k => { try { localStorage.removeItem(k) } catch (e) {} } };
+
+/* ---------- Переводы ---------- */
+const T = {
+ru: { title:'Ваши награды', tag:'Больше заказов — больше заработок — больше экономия', loginHint:'Введите последние 5 цифр номера телефона', go:'Войти',
+ chooseCity:'Выберите город', chooseHint:'Эти цифры есть у нескольких водителей', back:'Назад', bonusTitle:'Бонус за заказы', todayDone:'Сегодня выполнено', forSum:'на сумму',
+ todayBonus:'Бонус за сегодня', moreTo:'Ещё {n} зак. до бонуса {p}%', maxLevel:'Максимальный уровень бонуса', claim:'Получить монеты',
+ nextCoins:'Следующие монеты через', nextCoinsNote:'(с 9:00 по Бангкоку)', weekTitle:'Ваша статистика за неделю', orders:'заказов', sum:'сумма', coinsU:'монет',
+ yourCoins:'Ваши монеты', coinsHint:'Обменивайте на пакеты бесплатной комиссии', exchange:'Обменять',
+ wdTitle:'Вывод на баланс Taxsee Driver', wdNote:'Неиспользованные монеты будут переведены на баланс Taxsee Driver в понедельник.', wdLeft:'Осталось:',
+ myReqs:'Мои заявки', pdlTitle:'❗ Хотите участвовать в программе?', pdlText:'Без Public Driver License (PDL) вы пока не можете получать бонусы и монеты.', pdlBtn:'Загрузить Public Driver License',
+ logout:'Выйти', nHome:'Главная', nRules:'Правила акции', nBack:'Назад в Taxsee Driver',
+ wd:['Пн','Вт','Ср','Чт','Пт','Сб','Вс'], ud:'д', uh:'ч', um:'мин', hour1:'час', hour2:'часа', hour5:'часов',
+ st_new:'Новая', st_work:'В работе', st_done:'Выполнена', st_rej:'Отклонена', pkgReq:'Пакет {h}', wdReq:'Вывод на Taxsee Driver',
+ okClaim:'Монеты получены', okBuy:'Заявка отправлена в поддержку', confirmBuy:'Обменять {c} монет на пакет {h}?',
+ pin5:'Введите ровно 5 цифр', ePin:'Введите 5 цифр', eNF:'Номер не найден. Проверьте цифры', eNoPdl:'Бонусы недоступны без Public Driver License (PDL)', eNothing:'Пока нечего получать', eNoPack:'Пакет не найден', eNoCoins:'Недостаточно монет', eNet:'Нет связи. Попробуйте ещё раз',
+ rulesTitle:'Правила акции', r_bonus_h:'Бонус за заказы', r_bonus_p:'Чем больше заказов за календарный день (по времени Бангкока), тем выше процент от их общей стоимости. Процент определяется достигнутым уровнем и применяется ко всей сумме дня.',
+ r_tier:'от {n} заказов — {p}%', r_coins_h:'Монеты', r_c1:'1 монета = 1 бат.', r_c2:'Монеты за вчерашний день можно получить после 9:00 по Бангкоку, один раз за каждый день.', r_c3:'Неполученные монеты можно забрать в течение 7 дней.',
+ r_spend_h:'На что потратить', r_pack:'пакет бесплатной комиссии на {h} — {c} монет', r_wd:'неиспользованные монеты автоматически переводятся на баланс Taxsee Driver по понедельникам.',
+ r_note:'Монеты списываются при заявке. Оператор обработает её вручную; статус виден в разделе «Мои заявки». Если заявка отклонена, монеты вернутся.', r_cond_h:'Условия участия', r_cond:'Нужна действующая Public Driver License (PDL).' },
+en: { title:'Your Rewards', tag:'More orders — more earnings — more savings', loginHint:'Enter the last 5 digits of your phone number', go:'Log in',
+ chooseCity:'Choose your city', chooseHint:'Several drivers share these digits', back:'Back', bonusTitle:'Order bonus', todayDone:'Completed today', forSum:'worth',
+ todayBonus:"Today's bonus", moreTo:'{n} more orders to reach the {p}% bonus', maxLevel:'Top bonus level reached', claim:'Get coins',
+ nextCoins:'Next coins available in', nextCoinsNote:'(from 9:00 Bangkok time)', weekTitle:'Your stats for the week', orders:'orders', sum:'total', coinsU:'coins',
+ yourCoins:'Your coins', coinsHint:'Exchange for free-commission packages', exchange:'Exchange',
+ wdTitle:'Transfer to Taxsee Driver balance', wdNote:'Unused coins will be transferred to your Taxsee Driver balance on Monday.', wdLeft:'Time left:',
+ myReqs:'My requests', pdlTitle:'❗ Want to join the program?', pdlText:"Without a Public Driver License (PDL) you can't receive bonuses and coins yet.", pdlBtn:'Upload Public Driver License',
+ logout:'Log out', nHome:'Home', nRules:'Program rules', nBack:'Back to Taxsee Driver',
+ wd:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'], ud:'d', uh:'h', um:'min', hour1:'hour', hour2:'hours', hour5:'hours',
+ st_new:'New', st_work:'In progress', st_done:'Completed', st_rej:'Rejected', pkgReq:'Package {h}', wdReq:'Transfer to Taxsee Driver',
+ okClaim:'Coins received', okBuy:'Request sent to support', confirmBuy:'Exchange {c} coins for a {h} package?',
+ pin5:'Enter exactly 5 digits', ePin:'Enter 5 digits', eNF:'Number not found. Check the digits', eNoPdl:'Bonuses are unavailable without a Public Driver License (PDL)', eNothing:'Nothing to claim yet', eNoPack:'Package not found', eNoCoins:'Not enough coins', eNet:'No connection. Please try again',
+ rulesTitle:'Program rules', r_bonus_h:'Order bonus', r_bonus_p:'The more orders you complete in a calendar day (Bangkok time), the higher the percentage of their total value. The level you reach applies to the whole day\'s total.',
+ r_tier:'from {n} orders — {p}%', r_coins_h:'Coins', r_c1:'1 coin = 1 baht.', r_c2:'Coins for yesterday can be claimed after 9:00 Bangkok time, once per day.', r_c3:'Unclaimed coins can be collected within 7 days.',
+ r_spend_h:'How to spend', r_pack:'free-commission package for {h} — {c} coins', r_wd:'unused coins are automatically transferred to your Taxsee Driver balance every Monday.',
+ r_note:'Coins are deducted when you submit a request. An operator processes it manually; the status is shown in "My requests". If a request is rejected, the coins are returned.', r_cond_h:'Eligibility', r_cond:'A valid Public Driver License (PDL) is required.' },
+th: { title:'รางวัลของคุณ', tag:'ออเดอร์มากขึ้น รายได้มากขึ้น ประหยัดมากขึ้น', loginHint:'กรอกเลข 5 หลักสุดท้ายของเบอร์โทรศัพท์', go:'เข้าสู่ระบบ',
+ chooseCity:'เลือกเมือง', chooseHint:'เลขชุดนี้ตรงกับคนขับหลายคน', back:'ย้อนกลับ', bonusTitle:'โบนัสจากออเดอร์', todayDone:'วันนี้ทำได้', forSum:'มูลค่ารวม',
+ todayBonus:'โบนัสวันนี้', moreTo:'อีก {n} ออเดอร์ รับโบนัส {p}%', maxLevel:'ถึงระดับโบนัสสูงสุดแล้ว', claim:'รับเหรียญ',
+ nextCoins:'รับเหรียญครั้งถัดไปในอีก', nextCoinsNote:'(ตั้งแต่ 9:00 น. เวลากรุงเทพฯ)', weekTitle:'สถิติของคุณในสัปดาห์นี้', orders:'ออเดอร์', sum:'มูลค่ารวม', coinsU:'เหรียญ',
+ yourCoins:'เหรียญของคุณ', coinsHint:'แลกเป็นแพ็กเกจฟรีค่าคอมมิชชัน', exchange:'แลก',
+ wdTitle:'โอนเข้ายอด Taxsee Driver', wdNote:'เหรียญที่ไม่ได้ใช้จะถูกโอนเข้ายอด Taxsee Driver ในวันจันทร์', wdLeft:'เหลืออีก:',
+ myReqs:'คำขอของฉัน', pdlTitle:'❗ อยากเข้าร่วมโปรแกรมไหม?', pdlText:'หากยังไม่มีใบอนุญาตคนขับสาธารณะ (PDL) คุณจะยังรับโบนัสและเหรียญไม่ได้', pdlBtn:'อัปโหลดใบอนุญาต PDL',
+ logout:'ออกจากระบบ', nHome:'หน้าหลัก', nRules:'กติกา', nBack:'กลับไป Taxsee Driver',
+ wd:['จ','อ','พ','พฤ','ศ','ส','อา'], ud:'วัน', uh:'ชม.', um:'นาที', hour1:'ชั่วโมง', hour2:'ชั่วโมง', hour5:'ชั่วโมง',
+ st_new:'ใหม่', st_work:'กำลังดำเนินการ', st_done:'เสร็จสิ้น', st_rej:'ถูกปฏิเสธ', pkgReq:'แพ็กเกจ {h}', wdReq:'โอนเข้า Taxsee Driver',
+ okClaim:'รับเหรียญแล้ว', okBuy:'ส่งคำขอถึงฝ่ายสนับสนุนแล้ว', confirmBuy:'แลก {c} เหรียญเป็นแพ็กเกจ {h} ใช่ไหม?',
+ pin5:'กรอกเลข 5 หลักให้ครบ', ePin:'กรอกเลข 5 หลัก', eNF:'ไม่พบหมายเลข โปรดตรวจสอบตัวเลข', eNoPdl:'ไม่สามารถรับโบนัสได้หากไม่มีใบอนุญาตคนขับสาธารณะ (PDL)', eNothing:'ยังไม่มีเหรียญให้รับ', eNoPack:'ไม่พบแพ็กเกจ', eNoCoins:'เหรียญไม่เพียงพอ', eNet:'ไม่มีการเชื่อมต่อ โปรดลองอีกครั้ง',
+ rulesTitle:'กติกาโปรแกรม', r_bonus_h:'โบนัสจากออเดอร์', r_bonus_p:'ยิ่งทำออเดอร์ได้มากใน 1 วันตามปฏิทิน (เวลากรุงเทพฯ) เปอร์เซ็นต์ของมูลค่าออเดอร์รวมก็ยิ่งสูง ระดับที่ทำได้จะนำไปคำนวณกับยอดรวมทั้งวัน',
+ r_tier:'ตั้งแต่ {n} ออเดอร์ — {p}%', r_coins_h:'เหรียญ', r_c1:'1 เหรียญ = 1 บาท', r_c2:'รับเหรียญของเมื่อวานได้หลัง 9:00 น. เวลากรุงเทพฯ วันละ 1 ครั้ง', r_c3:'เหรียญที่ยังไม่ได้รับ สามารถรับได้ภายใน 7 วัน',
+ r_spend_h:'ใช้เหรียญอย่างไร', r_pack:'แพ็กเกจฟรีค่าคอมมิชชัน {h} — {c} เหรียญ', r_wd:'เหรียญที่ไม่ได้ใช้จะถูกโอนเข้ายอด Taxsee Driver อัตโนมัติทุกวันจันทร์',
+ r_note:'เหรียญจะถูกหักเมื่อส่งคำขอ เจ้าหน้าที่จะดำเนินการด้วยตนเอง และดูสถานะได้ที่ "คำขอของฉัน" หากคำขอถูกปฏิเสธ เหรียญจะถูกคืน', r_cond_h:'เงื่อนไขการเข้าร่วม', r_cond:'ต้องมีใบอนุญาตคนขับสาธารณะ (PDL) ที่ยังใช้งานได้' }
+};
+const LOC = { ru: 'ru', en: 'en-US', th: 'th-TH' };
+let L = ls.get('lang'); if (!T[L]) L = 'ru';
+const t = (k, v) => { let s = T[L][k] ?? T.ru[k] ?? k; for (const x in v) s = s.replace('{' + x + '}', v[x]); return s; };
+// тексты ошибок бэкенда (русские) → ключи переводов
+const ERR = { 'Введите 5 цифр': 'ePin', 'Номер не найден. Проверьте цифры': 'eNF', 'Номер не найден': 'eNF', 'Бонусы недоступны без Public Driver License (PDL)': 'eNoPdl', 'Пока нечего получать': 'eNothing', 'Пакет не найден': 'eNoPack', 'Недостаточно монет': 'eNoCoins', 'Нет монет для вывода': 'eNoCoins' };
+const STK = { 'Новая': 'new', 'В работе': 'work', 'Выполнена': 'done', 'Отклонена': 'rej' };
+const emsg = e => e instanceof TypeError ? 'eNet' : e.message;
+const errText = m => t(ERR[m] || m);
+
+let sess = null, S = null, tab = 'home', busy = false, choose = null, lastErr = '';
 const $ = s => document.querySelector(s), app = $('#app');
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const hrs = n => n + ' ' + ((n % 10 == 1 && n % 100 != 11) ? 'час' : (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20)) ? 'часа' : 'часов');
-const dur = ms => { const m = Math.floor(Math.max(0, ms) / 6e4), d = Math.floor(m / 1440), h = Math.floor(m % 1440 / 60); return (d ? d + ' д ' : '') + h + ' ч ' + m % 60 + ' мин'; };
-const money = n => '฿' + Math.round(n).toLocaleString('ru');
-const ls = { get: k => { try { return localStorage.getItem(k) } catch (e) { return null } }, set: (k, v) => { try { localStorage.setItem(k, v) } catch (e) {} }, del: k => { try { localStorage.removeItem(k) } catch (e) {} } };
+const hrs = n => L === 'ru' ? n + ' ' + ((n % 10 == 1 && n % 100 != 11) ? t('hour1') : (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20)) ? t('hour2') : t('hour5'))
+  : L === 'en' ? n + ' ' + (n == 1 ? t('hour1') : t('hour2')) : n + ' ' + t('hour1');
+const dur = ms => { const m = Math.floor(Math.max(0, ms) / 6e4), d = Math.floor(m / 1440), h = Math.floor(m % 1440 / 60); return (d ? d + ' ' + t('ud') + ' ' : '') + h + ' ' + t('uh') + ' ' + m % 60 + ' ' + t('um'); };
+const money = n => '฿' + Math.round(n).toLocaleString(LOC[L]);
 
 async function call(body) {
   const r = await fetch(API, { method: 'POST', body: JSON.stringify({ ...sess, ...body }) });   // text/plain → без preflight
@@ -89,114 +156,127 @@ async function call(body) {
   if (j.error) throw new Error(j.error);
   return j;
 }
-function toast(t) { const e = document.createElement('div'); e.className = 'toast'; e.textContent = t; document.body.append(e); setTimeout(() => e.remove(), 2800); }
+function toast(m) { const e = document.createElement('div'); e.className = 'toast'; e.textContent = m; document.body.append(e); setTimeout(() => e.remove(), 2800); }
 
-function loginView(msg = '') {
-  app.innerHTML = `<div class="login"><div class="logo">maxim</div><h1>Ваши награды</h1>
-  <p class="mut">Введите последние 5 цифр номера телефона</p>
-  <input id="pin" inputmode="numeric" maxlength="5" autocomplete="off" placeholder="•••••">
-  <p class="err" id="err">${esc(msg)}</p><button class="btn" id="go">Войти</button></div>`;
+/* ---------- Переключатель языка ---------- */
+const langSw = () => `<div class="lang">${['ru', 'en', 'th'].map(l => `<button data-l="${l}" class="${l === L ? 'on' : ''}">${l.toUpperCase()}</button>`).join('')}</div>`;
+const bindLang = () => app.querySelectorAll('[data-l]').forEach(b => b.onclick = () => setLang(b.dataset.l));
+function setLang(l) {
+  const v = ($('#pin') || {}).value || '';
+  L = l; ls.set('lang', l); document.documentElement.lang = l; document.title = t('title') + ' — Maxim';
+  S ? render() : choose ? chooseView(choose.pin, choose.cities) : loginView(lastErr, v);
+}
+
+/* ---------- Вход ---------- */
+function loginView(err = '', val = '') {
+  lastErr = err;
+  app.innerHTML = `<div class="login">${langSw()}<img class="logo" src="maxim-logo.png" alt="maxim"><h1>${t('title')}</h1>
+  <p class="mut">${t('loginHint')}</p>
+  <input id="pin" inputmode="numeric" maxlength="5" autocomplete="off" placeholder="•••••" value="${esc(val)}">
+  <p class="err" id="err">${err ? esc(errText(err)) : ''}</p><button class="btn" id="go">${t('go')}</button></div>`;
   const go = () => start($('#pin').value.trim());
-  $('#go').onclick = go; $('#pin').onkeydown = e => { if (e.key === 'Enter') go(); }; $('#pin').focus();
+  $('#go').onclick = go; $('#pin').onkeydown = e => { if (e.key === 'Enter') go(); }; $('#pin').focus(); bindLang();
 }
 async function start(pin, city) {
-  if (!/^\d{5}$/.test(pin)) return loginView('Введите ровно 5 цифр');
+  if (!/^\d{5}$/.test(pin)) return loginView('pin5', pin);
   sess = { pin, city };
   try {
     const j = await call({ a: 'state' });
-    if (j.choose) return chooseView(pin, j.choose);
-    sess.city = j.city; ls.set('sess', JSON.stringify(sess)); S = j; render();
-  } catch (e) { ls.del('sess'); loginView(e.message); }
+    if (j.choose) { choose = { pin, cities: j.choose }; return chooseView(pin, j.choose); }
+    choose = null; sess.city = j.city; ls.set('sess', JSON.stringify(sess)); S = j; render();
+  } catch (e) { ls.del('sess'); loginView(emsg(e), pin); }
 }
 function chooseView(pin, cities) {
-  app.innerHTML = `<div class="login"><div class="logo">maxim</div><h1>Выберите город</h1>
-  <p class="mut">Эти цифры есть у нескольких водителей</p>
+  app.innerHTML = `<div class="login">${langSw()}<img class="logo" src="maxim-logo.png" alt="maxim"><h1>${t('chooseCity')}</h1>
+  <p class="mut">${t('chooseHint')}</p>
   ${cities.map((c, i) => `<button class="btn" data-i="${i}">${esc(c.replace(/^TH Maxim\s*/i, ''))}</button>`).join('')}
-  <button class="out" id="back">Назад</button></div>`;
+  <button class="out" id="back">${t('back')}</button></div>`;
   app.querySelectorAll('[data-i]').forEach(b => b.onclick = () => start(pin, cities[b.dataset.i]));
-  $('#back').onclick = () => loginView();
+  $('#back').onclick = () => { choose = null; loginView('', pin); }; bindLang();
 }
 
-function bar(o, t) {
-  const n = t.length, pts = [0, ...t.map(x => x[0])]; let f = 100;
+/* ---------- Главный экран ---------- */
+function bar(o, tr) {
+  const n = tr.length, pts = [0, ...tr.map(x => x[0])]; let f = 100;
   if (o < pts[n]) for (let i = 0; i < n; i++) if (o < pts[i + 1]) { f = (i + (o - pts[i]) / (pts[i + 1] - pts[i])) / n * 100; break; }
-  return `<div class="bar"><i style="width:${f}%"></i>${t.map((x, i) =>
-    `<b class="${o >= x[0] ? 'on' : ''}" style="left:${(i + 1) / n * 100}%">${o >= x[0] ? '✓' : ''}<em>${x[1]}%</em><small>${x[0]} заказов</small></b>`).join('')}</div>`;
+  return `<div class="bar"><i style="width:${f}%"></i>${tr.map((x, i) =>
+    `<b class="${o >= x[0] ? 'on' : ''}" style="left:${(i + 1) / n * 100}%">${o >= x[0] ? '✓' : ''}<em>${x[1]}%</em><small>${x[0]} ${t('orders')}</small></b>`).join('')}</div>`;
 }
 
 function homeView() {
   const { today: td, tiers, packs, week, legal } = S, max = tiers.length ? tiers[tiers.length - 1][0] : 30;
-  const next = tiers.find(t => t[0] > td.o), claim = S.claimDays.reduce((s, x) => s + x.coins, 0);
-  const days = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'], today = new Date(Date.now() + 7 * 36e5).toISOString().slice(0, 10);
-  const cols = days.map((nm, i) => {
+  const next = tiers.find(x => x[0] > td.o), claim = S.claimDays.reduce((s, x) => s + x.coins, 0);
+  const today = new Date(Date.now() + 7 * 36e5).toISOString().slice(0, 10);
+  const cols = T[L].wd.map((nm, i) => {
     const d = new Date(Date.parse(S.weekStart) + i * 864e5).toISOString().slice(0, 10), x = week.find(w => w.d === d);
     return `<div class="col ${d === today ? 'now' : ''}"><div class="t"><i style="height:${x ? Math.min(100, x.o / max * 100) : 0}%"></i></div><b>${x ? x.o : '–'}</b><span class="mut">${nm}</span><span>${x ? (x.done ? '✓' : x.coins ? '🪙' : '') : ''}</span></div>`;
   }).join('');
   const wo = week.reduce((s, x) => s + x.o, 0), ws = week.reduce((s, x) => s + x.s, 0), wc = week.reduce((s, x) => s + x.coins, 0);
+  const reqTitle = r => r.type === 'Вывод' ? t('wdReq') : r.type === 'Пакет' ? t('pkgReq', { h: hrs(parseInt(r.title) || 0) }) : esc(r.title);
   return `
-  <header><div class="top"><span class="logo">maxim</span><div class="pill"><span class="coin">฿</span><div>${S.balance}<small>Ваши монеты</small></div></div></div>
-  <h1>Ваши награды</h1><p>Больше заказов — больше заработок — больше экономия</p></header>
-  <section class="card"><div class="row"><div class="gift">🎁</div><div><h2>Бонус за заказы</h2><span class="mut">Сегодня выполнено · ${esc(S.cityName)}</span><div class="big">${td.o} <span>на сумму ${money(td.s)}</span></div></div></div>
+  <header><div class="top"><img class="logo" src="maxim-logo.png" alt="maxim">${langSw()}</div>
+  <h1>${t('title')}</h1><p>${t('tag')}</p></header>
+  <section class="card"><div class="row"><div class="gift">🎁</div><div><h2>${t('bonusTitle')}</h2><span class="mut">${t('todayDone')} · ${esc(S.cityName)}</span><div class="big">${td.o} <span>${t('forSum')} ${money(td.s)}</span></div></div></div>
   ${tiers.length ? bar(td.o, tiers) : ''}
-  <div class="today"><span class="mut">Бонус за сегодня</span><div class="big">${td.pct}% <span>${money(td.coins)}</span></div>
-  <p class="mut">${next ? `Ещё ${next[0] - td.o} зак. до бонуса ${next[1]}%` : 'Максимальный уровень бонуса'}</p></div>
-  <button class="btn" id="claim" ${claim > 0 ? '' : 'disabled'}>🪙 Получить монеты${claim > 0 ? ' +' + claim : ''}</button>
-  <p class="mut" style="margin-top:10px">⏱ Следующие монеты через <b data-cd="${S.nextClaimAt}">${dur(S.nextClaimAt - Date.now())}</b> (с 9:00 по Бангкоку)</p></section>
+  <div class="today"><span class="mut">${t('todayBonus')}</span><div class="big">${td.pct}% <span>${money(td.coins)}</span></div>
+  <p class="mut">${next ? t('moreTo', { n: next[0] - td.o, p: next[1] }) : t('maxLevel')}</p></div>
+  <button class="btn" id="claim" ${claim > 0 ? '' : 'disabled'}>🪙 ${t('claim')}${claim > 0 ? ' +' + claim : ''}</button>
+  <p class="mut" style="margin-top:10px">⏱ ${t('nextCoins')} <b data-cd="${S.nextClaimAt}">${dur(S.nextClaimAt - Date.now())}</b> ${t('nextCoinsNote')}</p></section>
 
-  <section class="card"><h2>За неделю</h2><div class="week">${cols}</div>
-  <div class="tot"><div><b>${wo}</b><span class="mut">заказов</span></div><div><b>${money(ws)}</b><span class="mut">сумма</span></div><div><b>${wc}</b><span class="mut">монет</span></div></div></section>
+  <section class="card"><h2>${t('weekTitle')}</h2><div class="week">${cols}</div>
+  <div class="tot"><div><b>${wo}</b><span class="mut">${t('orders')}</span></div><div><b>${money(ws)}</b><span class="mut">${t('sum')}</span></div><div><b>${wc}</b><span class="mut">${t('coinsU')}</span></div></div></section>
 
-  <section class="card dark"><div class="row" style="justify-content:space-between"><div><h2>Ваши монеты</h2><span class="mut">Обменивайте на пакеты бесплатной комиссии</span></div><div class="pill" style="background:none;color:var(--y);font-size:26px">${S.balance}</div></div>
+  <section class="card dark"><div class="row" style="justify-content:space-between"><div><h2>${t('yourCoins')}</h2><span class="mut">${t('coinsHint')}</span></div><div class="pill" style="background:none;color:var(--y);font-size:26px">${S.balance}</div></div>
   <div class="packs">${packs.map((p, i) => `<div class="pack"><b>${hrs(p[0])}</b><div class="cost"><span class="coin">฿</span>${p[1]}</div>
-  <button class="btn sm" data-buy="${i}" ${S.balance >= p[1] ? '' : 'disabled'}>Обменять</button></div>`).join('')}</div></section>
+  <button class="btn sm" data-buy="${i}" ${S.balance >= p[1] ? '' : 'disabled'}>${t('exchange')}</button></div>`).join('')}</div></section>
 
-  <section class="card"><h2>Вывод на баланс Taxsee Driver</h2>
-  <p class="mut" style="margin-top:4px">Неиспользованные монеты переводятся на баланс Taxsee Driver каждый понедельник. До перевода: <b data-cd="${S.nextMonday}">${dur(S.nextMonday - Date.now())}</b></p>
-  <button class="btn sm" id="wd" ${S.balance >= 1 ? '' : 'disabled'}>Запросить вывод сейчас · ${S.balance} ฿</button></section>
+  <section class="card"><h2>${t('wdTitle')}</h2>
+  <p class="mut" style="margin-top:4px">${t('wdNote')} ${t('wdLeft')} <b data-cd="${S.nextMonday}">${dur(S.nextMonday - Date.now())}</b></p></section>
 
-  ${S.requests.length ? `<section class="card"><h2>Мои заявки</h2>${S.requests.map(r => `<div class="req"><div><b>${esc(r.title)}</b><div class="mut">${esc(r.t)}</div></div><div style="text-align:right"><span class="st ${esc(r.st)}">${esc(r.st)}</span><div class="mut">−${r.cost}</div></div></div>`).join('')}</section>` : ''}
+  ${S.requests.length ? `<section class="card"><h2>${t('myReqs')}</h2>${S.requests.map(r => { const k = STK[r.st]; return `<div class="req"><div><b>${reqTitle(r)}</b><div class="mut">${esc(r.t)}</div></div><div style="text-align:right"><span class="st ${k || ''}">${k ? t('st_' + k) : esc(r.st)}</span><div class="mut">−${r.cost}</div></div></div>`; }).join('')}</section>` : ''}
 
-  ${legal ? '' : `<section class="warn"><h2>❗ Хотите участвовать в программе?</h2><p style="margin:6px 0 0">Без Public Driver License (PDL) вы пока не можете получать бонусы и монеты.</p><a href="${PDL_URL}"><button class="btn keep sm">Загрузить Public Driver License</button></a></section>`}
-  <button class="out" id="out">Выйти</button>`;
+  ${legal ? '' : `<section class="warn"><h2>${t('pdlTitle')}</h2><p style="margin:6px 0 0">${t('pdlText')}</p><a href="${PDL_URL}"><button class="btn keep sm">${t('pdlBtn')}</button></a></section>`}
+  <button class="out" id="out">${t('logout')}</button>`;
 }
 
 function rulesView() {
-  return `<header><div class="top"><span class="logo">maxim</span></div><h1>Правила акции</h1></header>
-  <section class="card rules"><h2>Бонус за заказы</h2><p>Чем больше заказов за календарный день (по времени Бангкока), тем выше процент от их общей стоимости. Процент определяется достигнутым уровнем и применяется ко всей сумме дня.</p>
-  <ul>${S.tiers.map(t => `<li>от ${t[0]} заказов — ${t[1]}%</li>`).join('')}</ul>
-  <h2>Монеты</h2><ul><li>1 монета = 1 бат.</li><li>Монеты за вчерашний день можно получить после 9:00 по Бангкоку, один раз за каждый день.</li><li>Неполученные монеты можно забрать в течение 7 дней.</li></ul>
-  <h2>На что потратить</h2><ul>${S.packs.map(p => `<li>пакет бесплатной комиссии на ${hrs(p[0])} — ${p[1]} монет</li>`).join('')}<li>перевод на баланс Taxsee Driver (автоматически по понедельникам или по запросу).</li></ul>
-  <p style="margin-top:8px">Монеты списываются при заявке. Оператор обработает её вручную; статус виден в разделе «Мои заявки». Если заявка отклонена, монеты вернутся.</p>
-  <h2>Условия участия</h2><ul><li>Нужна действующая Public Driver License (PDL).</li></ul></section>`;
+  return `<header><div class="top"><img class="logo" src="maxim-logo.png" alt="maxim">${langSw()}</div><h1>${t('rulesTitle')}</h1></header>
+  <section class="card rules"><h2>${t('r_bonus_h')}</h2><p>${t('r_bonus_p')}</p>
+  <ul>${S.tiers.map(x => `<li>${t('r_tier', { n: x[0], p: x[1] })}</li>`).join('')}</ul>
+  <h2>${t('r_coins_h')}</h2><ul><li>${t('r_c1')}</li><li>${t('r_c2')}</li><li>${t('r_c3')}</li></ul>
+  <h2>${t('r_spend_h')}</h2><ul>${S.packs.map(p => `<li>${t('r_pack', { h: hrs(p[0]), c: p[1] })}</li>`).join('')}<li>${t('r_wd')}</li></ul>
+  <p style="margin-top:8px">${t('r_note')}</p>
+  <h2>${t('r_cond_h')}</h2><ul><li>${t('r_cond')}</li></ul></section>`;
 }
 
 function render() {
   app.className = S.legal ? '' : 'off'; document.body.classList.toggle('off', !S.legal);
   app.innerHTML = (tab === 'home' ? homeView() : rulesView()) + `<nav>
-  <a data-t="home" class="${tab === 'home' ? 'on' : ''}"><span>🏠</span>Главная</a>
-  <a data-t="rules" class="${tab === 'rules' ? 'on' : ''}"><span>📋</span>Правила акции</a>
-  <a href="${TAXSEE_URL}"><span>↩️</span>Назад в Taxsee Driver</a></nav>`;
+  <a data-t="home" class="${tab === 'home' ? 'on' : ''}"><span>🏠</span>${t('nHome')}</a>
+  <a data-t="rules" class="${tab === 'rules' ? 'on' : ''}"><span>📋</span>${t('nRules')}</a>
+  <a href="${TAXSEE_URL}"><span>↩️</span>${t('nBack')}</a></nav>`;
   app.querySelectorAll('[data-t]').forEach(a => a.onclick = () => { tab = a.dataset.t; render(); scrollTo(0, 0); });
+  bindLang();
   const run = (body, ok) => async () => {
     if (busy) return; busy = true;
-    try { S = await call(body); toast(ok); } catch (e) { toast(e.message); }
+    try { S = await call(body); toast(t(ok)); } catch (e) { toast(errText(emsg(e))); }
     busy = false; render();
   };
-  if ($('#claim')) $('#claim').onclick = run({ a: 'claim' }, 'Монеты получены');
-  if ($('#wd')) $('#wd').onclick = () => confirm(`Запросить вывод ${S.balance} ฿ на баланс Taxsee Driver?`) && run({ a: 'withdraw' }, 'Заявка на вывод создана')();
+  if ($('#claim')) $('#claim').onclick = run({ a: 'claim' }, 'okClaim');
   app.querySelectorAll('[data-buy]').forEach(b => b.onclick = () => {
     const p = S.packs[b.dataset.buy];
-    if (confirm(`Обменять ${p[1]} монет на пакет ${hrs(p[0])}?`)) run({ a: 'buy', i: +b.dataset.buy }, 'Заявка отправлена в поддержку')();
+    if (confirm(t('confirmBuy', { c: p[1], h: hrs(p[0]) }))) run({ a: 'buy', i: +b.dataset.buy }, 'okBuy')();
   });
-  if ($('#out')) $('#out').onclick = () => { ls.del('sess'); sess = S = null; document.body.classList.remove('off'); loginView(); };
+  if ($('#out')) $('#out').onclick = () => { ls.del('sess'); sess = S = null; document.body.classList.remove('off'); app.className = ''; loginView(); };
 }
 
 setInterval(() => {
-  document.querySelectorAll('[data-cd]').forEach(e => { const l = +e.dataset.cd - Date.now(); e.textContent = dur(l); });
+  document.querySelectorAll('[data-cd]').forEach(e => { e.textContent = dur(+e.dataset.cd - Date.now()); });
   if (S && (S.nextClaimAt < Date.now() || S.nextMonday < Date.now()) && !busy) refresh();
 }, 30000);
 async function refresh() { try { S = await call({ a: 'state' }); render(); } catch (e) {} }
 
+document.documentElement.lang = L; document.title = t('title') + ' — Maxim';
 const saved = ls.get('sess');
 if (saved) { try { const s = JSON.parse(saved); start(s.pin, s.city); } catch (e) { loginView(); } } else loginView();
 </script>
