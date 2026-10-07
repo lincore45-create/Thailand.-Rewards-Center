@@ -3,6 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://script.google.com">
+<link rel="preload" as="image" href="background.jpg">
+<link rel="preload" as="image" href="maxim-logo.png">
 <title>Ваши награды — Maxim</title>
 <style>
 :root{--y:#ffd91a;--y2:#fff3b8;--ink:#1c1c21;--mut:#6b7280;--bg:#f3f3f1;--dark:#23262d;--ok:#1f9d55;--bad:#e5384f}
@@ -59,6 +62,12 @@ h2{font-size:17px}.mut{color:var(--mut);font-size:13px}
 .lang button{border:0;background:none;border-radius:16px;padding:6px 11px;font-weight:700;font-size:12px;font-family:inherit;color:var(--ink);cursor:pointer}
 .lang button.on{background:var(--ink);color:#fff}
 .login .lang{width:fit-content;margin:0 auto 14px}
+#ld{position:fixed;top:0;left:0;right:0;height:3px;z-index:20;pointer-events:none;opacity:0;transition:opacity .2s;background:linear-gradient(90deg,transparent,var(--ink),transparent) no-repeat;background-size:40% 100%;animation:ld 1s linear infinite}
+#ld.on{opacity:1}
+@keyframes ld{from{background-position:-40% 0}to{background-position:140% 0}}
+@keyframes sp{to{transform:rotate(360deg)}}
+.btn.load{position:relative;color:transparent;pointer-events:none}
+.btn.load::after{content:'';position:absolute;inset:0;margin:auto;width:20px;height:20px;border:3px solid #0003;border-top-color:var(--ink);border-radius:50%;animation:sp .7s linear infinite}
 nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e5e5e5;display:flex;justify-content:space-around;padding:8px 0 calc(env(safe-area-inset-bottom,0px) + 8px)}
 nav a{flex:1;text-align:center;font-size:12px;color:#444;text-decoration:none;cursor:pointer}
 nav a span{display:block;font-size:22px}nav a.on{color:#d49a00;font-weight:700}
@@ -74,6 +83,7 @@ nav a span{display:block;font-size:22px}nav a.on{color:#d49a00;font-weight:700}
 </style>
 </head>
 <body>
+<div id="ld"></div>
 <div class="bg"></div>
 <main id="app"></main>
 <script>
@@ -150,12 +160,19 @@ const hrs = n => L === 'ru' ? n + ' ' + ((n % 10 == 1 && n % 100 != 11) ? t('hou
 const dur = ms => { const m = Math.floor(Math.max(0, ms) / 6e4), d = Math.floor(m / 1440), h = Math.floor(m % 1440 / 60); return (d ? d + ' ' + t('ud') + ' ' : '') + h + ' ' + t('uh') + ' ' + m % 60 + ' ' + t('um'); };
 const money = n => '฿' + Math.round(n).toLocaleString(LOC[L]);
 
+let pend = 0;
+const loading = on => { pend += on ? 1 : -1; $('#ld').classList.toggle('on', pend > 0); };
 async function call(body) {
-  const r = await fetch(API, { method: 'POST', body: JSON.stringify({ ...sess, ...body }) });   // text/plain → без preflight
-  const j = await r.json();
-  if (j.error) throw new Error(j.error);
-  return j;
+  loading(1);
+  try {
+    const r = await fetch(API, { method: 'POST', body: JSON.stringify({ ...sess, ...body }) });   // text/plain → без preflight
+    const j = await r.json();
+    if (j.error) throw new Error(j.error);
+    return j;
+  } finally { loading(0); }
 }
+// последний ответ хранится на устройстве, чтобы показать экран сразу, пока идёт обновление
+const setState = j => { S = j; ls.set('last', JSON.stringify({ p: sess.pin, c: sess.city, t: Date.now(), s: j })); };
 function toast(m) { const e = document.createElement('div'); e.className = 'toast'; e.textContent = m; document.body.append(e); setTimeout(() => e.remove(), 2800); }
 
 /* ---------- Переключатель языка ---------- */
@@ -174,7 +191,7 @@ function loginView(err = '', val = '') {
   <p class="mut">${t('loginHint')}</p>
   <input id="pin" inputmode="numeric" maxlength="5" autocomplete="off" placeholder="•••••" value="${esc(val)}">
   <p class="err" id="err">${err ? esc(errText(err)) : ''}</p><button class="btn" id="go">${t('go')}</button></div>`;
-  const go = () => start($('#pin').value.trim());
+  const go = () => { $('#go').classList.add('load'); start($('#pin').value.trim()); };
   $('#go').onclick = go; $('#pin').onkeydown = e => { if (e.key === 'Enter') go(); }; $('#pin').focus(); bindLang();
 }
 async function start(pin, city) {
@@ -183,15 +200,18 @@ async function start(pin, city) {
   try {
     const j = await call({ a: 'state' });
     if (j.choose) { choose = { pin, cities: j.choose }; return chooseView(pin, j.choose); }
-    choose = null; sess.city = j.city; ls.set('sess', JSON.stringify(sess)); S = j; render();
-  } catch (e) { ls.del('sess'); loginView(emsg(e), pin); }
+    choose = null; sess.city = j.city; ls.set('sess', JSON.stringify(sess)); setState(j); render();
+  } catch (e) {
+    if (S && emsg(e) === 'eNet') return toast(t('eNet'));      // есть сохранённые данные — оставляем их на экране
+    ls.del('sess'); ls.del('last'); S = null; document.body.classList.remove('off'); app.className = ''; loginView(emsg(e), pin);
+  }
 }
 function chooseView(pin, cities) {
   app.innerHTML = `<div class="login">${langSw()}<img class="logo" src="maxim-logo.png" alt="maxim"><h1>${t('chooseCity')}</h1>
   <p class="mut">${t('chooseHint')}</p>
   ${cities.map((c, i) => `<button class="btn" data-i="${i}">${esc(c.replace(/^TH Maxim\s*/i, ''))}</button>`).join('')}
   <button class="out" id="back">${t('back')}</button></div>`;
-  app.querySelectorAll('[data-i]').forEach(b => b.onclick = () => start(pin, cities[b.dataset.i]));
+  app.querySelectorAll('[data-i]').forEach(b => b.onclick = () => { b.classList.add('load'); start(pin, cities[b.dataset.i]); });
   $('#back').onclick = () => { choose = null; loginView('', pin); }; bindLang();
 }
 
@@ -257,28 +277,35 @@ function render() {
   <a href="${TAXSEE_URL}"><span>↩️</span>${t('nBack')}</a></nav>`;
   app.querySelectorAll('[data-t]').forEach(a => a.onclick = () => { tab = a.dataset.t; render(); scrollTo(0, 0); });
   bindLang();
-  const run = (body, ok) => async () => {
-    if (busy) return; busy = true;
-    try { S = await call(body); toast(t(ok)); } catch (e) { toast(errText(emsg(e))); }
+  const run = (body, ok, btn) => async () => {
+    if (busy) return; busy = true; if (btn) btn.classList.add('load');
+    try { setState(await call(body)); toast(t(ok)); } catch (e) { toast(errText(emsg(e))); }
     busy = false; render();
   };
-  if ($('#claim')) $('#claim').onclick = run({ a: 'claim' }, 'okClaim');
+  if ($('#claim')) $('#claim').onclick = run({ a: 'claim' }, 'okClaim', $('#claim'));
   app.querySelectorAll('[data-buy]').forEach(b => b.onclick = () => {
     const p = S.packs[b.dataset.buy];
-    if (confirm(t('confirmBuy', { c: p[1], h: hrs(p[0]) }))) run({ a: 'buy', i: +b.dataset.buy }, 'okBuy')();
+    if (confirm(t('confirmBuy', { c: p[1], h: hrs(p[0]) }))) run({ a: 'buy', i: +b.dataset.buy }, 'okBuy', b)();
   });
-  if ($('#out')) $('#out').onclick = () => { ls.del('sess'); sess = S = null; document.body.classList.remove('off'); app.className = ''; loginView(); };
+  if ($('#out')) $('#out').onclick = () => { ls.del('sess'); ls.del('last'); sess = S = null; document.body.classList.remove('off'); app.className = ''; loginView(); };
 }
 
 setInterval(() => {
   document.querySelectorAll('[data-cd]').forEach(e => { e.textContent = dur(+e.dataset.cd - Date.now()); });
   if (S && (S.nextClaimAt < Date.now() || S.nextMonday < Date.now()) && !busy) refresh();
 }, 30000);
-async function refresh() { try { S = await call({ a: 'state' }); render(); } catch (e) {} }
+async function refresh() { try { setState(await call({ a: 'state' })); render(); } catch (e) {} }
 
 document.documentElement.lang = L; document.title = t('title') + ' — Maxim';
 const saved = ls.get('sess');
-if (saved) { try { const s = JSON.parse(saved); start(s.pin, s.city); } catch (e) { loginView(); } } else loginView();
+if (saved) {
+  try {
+    const s = JSON.parse(saved), c = JSON.parse(ls.get('last') || 'null');
+    sess = s;
+    if (c && c.p === s.pin && c.c === s.city && Date.now() - c.t < 864e5) { S = c.s; render(); }
+    start(s.pin, s.city);
+  } catch (e) { loginView(); }
+} else loginView();
 </script>
 </body>
 </html>
