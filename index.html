@@ -68,8 +68,9 @@ h2{font-size:17px}.mut{color:var(--mut);font-size:13px}
 .btn.load{position:relative;color:transparent;pointer-events:none}
 .btn.load::after{content:'';position:absolute;inset:0;margin:auto;width:20px;height:20px;border:3px solid #0003;border-top-color:var(--ink);border-radius:50%;animation:sp .7s linear infinite}
 nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e5e5e5;display:flex;justify-content:space-around;padding:8px 0 calc(env(safe-area-inset-bottom,0px) + 8px)}
-nav a{flex:1;text-align:center;font-size:12px;color:#444;text-decoration:none;cursor:pointer}
-nav a span{display:block;font-size:22px}nav a.on{color:#d49a00;font-weight:700}
+nav a{flex:1;text-align:center;font-size:11px;line-height:1.2;color:#444;text-decoration:none;cursor:pointer}
+nav a span{display:block;font-size:22px;position:relative;width:fit-content;margin:0 auto}
+nav .dot{position:absolute;top:0;right:-6px;width:10px;height:10px;border-radius:50%;background:var(--bad);border:2px solid #fff}nav a.on{color:#d49a00;font-weight:700}
 .login{max-width:360px;margin:12vh 16px 0;padding:24px;text-align:center;background:#ffffffd9;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-radius:24px;box-shadow:0 4px 24px #0002}
 @media(min-width:392px){.login{margin:12vh auto 0}}
 .login h1{margin:14px 0 6px}
@@ -93,7 +94,7 @@ const ls = { get: k => { try { return localStorage.getItem(k) } catch (e) { retu
 
 /* ---------- Переводы ---------- */
 const T = {
-ru: { awTitle:'Награды водителя', awHint:'За каждую награду можно один раз получить {n} монет', awCount:'Получено наград: {a} из {b}', awClaim:'Получить монеты за награды', aw_month:'Лучший водитель месяца', aw_year:'Лучший водитель года', aw_hero:'Водитель-герой', aw_o100:'Первые 100 заказов', aw_o500:'Первые 500 заказов', aw_o1000:'Первые 1000 заказов', aw_km1k:'1000 км с Maxim', aw_km10k:'10 000 км с Maxim', aw_km100k:'100 000 км с Maxim', r_aw:'За каждую награду водителя можно один раз получить {n} монет.', title:'Ваши награды', tag:'Больше заказов — больше заработок — больше экономия', loginHint:'Введите последние 5 цифр номера телефона', go:'Войти',
+ru: { nAwards:'Награды', awTitle:'Награды водителя', awHint:'За каждую награду можно один раз получить {n} монет', awCount:'Получено наград: {a} из {b}', awClaim:'Получить монеты за награды', aw_month:'Лучший водитель месяца', aw_year:'Лучший водитель года', aw_hero:'Водитель-герой', aw_o100:'Первые 100 заказов', aw_o500:'Первые 500 заказов', aw_o1000:'Первые 1000 заказов', aw_km1k:'1000 км с Maxim', aw_km10k:'10 000 км с Maxim', aw_km100k:'100 000 км с Maxim', r_aw:'За каждую награду водителя можно один раз получить {n} монет.', title:'Ваши награды', tag:'Больше заказов — больше заработок — больше экономия', loginHint:'Введите последние 5 цифр номера телефона', go:'Войти',
  chooseCity:'Выберите город', chooseHint:'Эти цифры есть у нескольких водителей', back:'Назад', bonusTitle:'Бонус за заказы', todayDone:'Сегодня выполнено', forSum:'на сумму',
  todayBonus:'Бонус за сегодня', moreTo:'Ещё {n} зак. до бонуса {p}%', maxLevel:'Максимальный уровень бонуса', claim:'Получить монеты',
  nextCoins:'Следующие монеты через', nextCoinsNote:'(с 9:00 по Бангкоку)', orders:'заказов',
@@ -109,7 +110,7 @@ ru: { awTitle:'Награды водителя', awHint:'За каждую на�
  r_tier:'от {n} заказов — {p}%', r_coins_h:'Монеты', r_c1:'1 монета = 1 бат.', r_c2:'Монеты за вчерашний день можно получить после 9:00 по Бангкоку, один раз за каждый день.', r_c3:'Неполученные монеты можно забрать в течение 7 дней.',
  r_spend_h:'На что потратить', r_pack:'пакет бесплатной комиссии на {h} — {c} монет', r_wd:'неиспользованные монеты автоматически переводятся на баланс Taxsee Driver по понедельникам.',
  r_note:'Монеты списываются при заявке. Оператор обработает её вручную; статус виден в разделе «Мои заявки». Если заявка отклонена, монеты вернутся.', r_cond_h:'Условия участия', r_cond:'Нужна действующая Public Driver License (PDL).' },
-en: { awTitle:'Driver awards', awHint:'Each award gives you {n} coins, once', awCount:'Awards earned: {a} of {b}', awClaim:'Get coins for awards', aw_month:'Driver of the month', aw_year:'Driver of the year', aw_hero:'Hero driver', aw_o100:'First 100 orders', aw_o500:'First 500 orders', aw_o1000:'First 1,000 orders', aw_km1k:'1,000 km with Maxim', aw_km10k:'10,000 km with Maxim', aw_km100k:'100,000 km with Maxim', r_aw:'For each driver award you can collect {n} coins once.', title:'Your Rewards', tag:'More orders — more earnings — more savings', loginHint:'Enter the last 5 digits of your phone number', go:'Log in',
+en: { nAwards:'Awards', awTitle:'Driver awards', awHint:'Each award gives you {n} coins, once', awCount:'Awards earned: {a} of {b}', awClaim:'Get coins for awards', aw_month:'Driver of the month', aw_year:'Driver of the year', aw_hero:'Hero driver', aw_o100:'First 100 orders', aw_o500:'First 500 orders', aw_o1000:'First 1,000 orders', aw_km1k:'1,000 km with Maxim', aw_km10k:'10,000 km with Maxim', aw_km100k:'100,000 km with Maxim', r_aw:'For each driver award you can collect {n} coins once.', title:'Your Rewards', tag:'More orders — more earnings — more savings', loginHint:'Enter the last 5 digits of your phone number', go:'Log in',
  chooseCity:'Choose your city', chooseHint:'Several drivers share these digits', back:'Back', bonusTitle:'Order bonus', todayDone:'Completed today', forSum:'worth',
  todayBonus:"Today's bonus", moreTo:'{n} more orders to reach the {p}% bonus', maxLevel:'Top bonus level reached', claim:'Get coins',
  nextCoins:'Next coins available in', nextCoinsNote:'(from 9:00 Bangkok time)', orders:'orders',
@@ -125,7 +126,7 @@ en: { awTitle:'Driver awards', awHint:'Each award gives you {n} coins, once', aw
  r_tier:'from {n} orders — {p}%', r_coins_h:'Coins', r_c1:'1 coin = 1 baht.', r_c2:'Coins for yesterday can be claimed after 9:00 Bangkok time, once per day.', r_c3:'Unclaimed coins can be collected within 7 days.',
  r_spend_h:'How to spend', r_pack:'free-commission package for {h} — {c} coins', r_wd:'unused coins are automatically transferred to your Taxsee Driver balance every Monday.',
  r_note:'Coins are deducted when you submit a request. An operator processes it manually; the status is shown in "My requests". If a request is rejected, the coins are returned.', r_cond_h:'Eligibility', r_cond:'A valid Public Driver License (PDL) is required.' },
-th: { awTitle:'เหรียญรางวัลคนขับ', awHint:'รับ {n} เหรียญต่อ 1 รางวัล (ครั้งเดียว)', awCount:'ได้รับรางวัลแล้ว {a} จาก {b}', awClaim:'รับเหรียญจากรางวัล', aw_month:'คนขับดีเด่นประจำเดือน', aw_year:'คนขับดีเด่นประจำปี', aw_hero:'คนขับฮีโร่', aw_o100:'100 ออเดอร์แรก', aw_o500:'500 ออเดอร์แรก', aw_o1000:'1,000 ออเดอร์แรก', aw_km1k:'1,000 กม. กับ Maxim', aw_km10k:'10,000 กม. กับ Maxim', aw_km100k:'100,000 กม. กับ Maxim', r_aw:'รับ {n} เหรียญต่อรางวัล 1 รางวัล (ครั้งเดียว)', title:'รางวัลของคุณ', tag:'ออเดอร์มากขึ้น รายได้มากขึ้น ประหยัดมากขึ้น', loginHint:'กรอกเลข 5 หลักสุดท้ายของเบอร์โทรศัพท์', go:'เข้าสู่ระบบ',
+th: { nAwards:'รางวัล', awTitle:'เหรียญรางวัลคนขับ', awHint:'รับ {n} เหรียญต่อ 1 รางวัล (ครั้งเดียว)', awCount:'ได้รับรางวัลแล้ว {a} จาก {b}', awClaim:'รับเหรียญจากรางวัล', aw_month:'คนขับดีเด่นประจำเดือน', aw_year:'คนขับดีเด่นประจำปี', aw_hero:'คนขับฮีโร่', aw_o100:'100 ออเดอร์แรก', aw_o500:'500 ออเดอร์แรก', aw_o1000:'1,000 ออเดอร์แรก', aw_km1k:'1,000 กม. กับ Maxim', aw_km10k:'10,000 กม. กับ Maxim', aw_km100k:'100,000 กม. กับ Maxim', r_aw:'รับ {n} เหรียญต่อรางวัล 1 รางวัล (ครั้งเดียว)', title:'รางวัลของคุณ', tag:'ออเดอร์มากขึ้น รายได้มากขึ้น ประหยัดมากขึ้น', loginHint:'กรอกเลข 5 หลักสุดท้ายของเบอร์โทรศัพท์', go:'เข้าสู่ระบบ',
  chooseCity:'เลือกเมือง', chooseHint:'เลขชุดนี้ตรงกับคนขับหลายคน', back:'ย้อนกลับ', bonusTitle:'โบนัสจากออเดอร์', todayDone:'วันนี้ทำได้', forSum:'มูลค่ารวม',
  todayBonus:'โบนัสวันนี้', moreTo:'อีก {n} ออเดอร์ รับโบนัส {p}%', maxLevel:'ถึงระดับโบนัสสูงสุดแล้ว', claim:'รับเหรียญ',
  nextCoins:'รับเหรียญครั้งถัดไปในอีก', nextCoinsNote:'(ตั้งแต่ 9:00 น. เวลากรุงเทพฯ)', orders:'ออเดอร์',
@@ -225,10 +226,6 @@ function bar(o, tr) {
 function homeView() {
   const { today: td, tiers, packs, legal } = S;
   const next = tiers.find(x => x[0] > td.o), claim = S.claimDays.reduce((s, x) => s + x.coins, 0);
-  const aw = S.awards || [], got = aw.filter(a => a.on).length, ac = S.awardClaim || 0, ak = S.awardCoins || 100;
-  const awHtml = aw.length ? `<section class="card"><h2>${t('awTitle')}</h2><p class="mut" style="margin-top:2px">${t('awHint', { n: ak })} · ${t('awCount', { a: got, b: aw.length })}</p>
-  <div class="awg">${aw.map(a => `<div class="aw ${a.on ? 'on' : ''}"><div class="ai"><img src="awards/${a.k}.webp" width="240" height="240" alt="${esc(t('aw_' + a.k))}" loading="lazy">${a.on ? `<span class="awb ${a.done ? 'ok' : ''}">${a.done ? '✓' : '+' + ak}</span>` : ''}</div><span>${t('aw_' + a.k)}</span></div>`).join('')}</div>
-  <button class="btn" id="awclaim" ${ac > 0 ? '' : 'disabled'}>🪙 ${t('awClaim')}${ac > 0 ? ' +' + ac : ''}</button></section>` : '';
   const reqTitle = r => r.type === 'Вывод' ? t('wdReq') : r.type === 'Пакет' ? t('pkgReq', { h: hrs(parseInt(r.title) || 0) }) : esc(r.title);
   return `
   <header><div class="top"><img class="logo" src="maxim-logo.png" alt="maxim">${langSw()}</div>
@@ -239,8 +236,6 @@ function homeView() {
   <p class="mut">${next ? t('moreTo', { n: next[0] - td.o, p: next[1] }) : t('maxLevel')}</p></div>
   <button class="btn" id="claim" ${claim > 0 ? '' : 'disabled'}>🪙 ${t('claim')}${claim > 0 ? ' +' + claim : ''}</button>
   <p class="mut" style="margin-top:10px">⏱ ${t('nextCoins')} <b data-cd="${S.nextClaimAt}">${dur(S.nextClaimAt - Date.now())}</b> ${t('nextCoinsNote')}</p></section>
-
-  ${awHtml}
 
   <section class="card dark"><div class="row" style="justify-content:space-between"><div><h2>${t('yourCoins')}</h2><span class="mut">${t('coinsHint')}</span></div><div class="pill" style="background:none;color:var(--y);font-size:26px">${S.balance}</div></div>
   <div class="packs">${packs.map((p, i) => `<div class="pack"><b>${hrs(p[0])}</b><div class="cost"><span class="coin">฿</span>${p[1]}</div>
@@ -255,6 +250,14 @@ function homeView() {
   <button class="out" id="out">${t('logout')}</button>`;
 }
 
+function awardsView() {
+  const aw = S.awards || [], got = aw.filter(a => a.on).length, ac = S.awardClaim || 0, ak = S.awardCoins || 100;
+  return `<header><div class="top"><img class="logo" src="maxim-logo.png" alt="maxim">${langSw()}</div><h1>${t('awTitle')}</h1></header>
+  <section class="card"><p class="mut">${t('awHint', { n: ak })} · ${t('awCount', { a: got, b: aw.length })}</p>
+  <div class="awg">${aw.map(a => `<div class="aw ${a.on ? 'on' : ''}"><div class="ai"><img src="awards/${a.k}.webp" width="240" height="240" alt="${esc(t('aw_' + a.k))}" loading="lazy">${a.on ? `<span class="awb ${a.done ? 'ok' : ''}">${a.done ? '✓' : '+' + ak}</span>` : ''}</div><span>${t('aw_' + a.k)}</span></div>`).join('')}</div>
+  <button class="btn" id="awclaim" ${ac > 0 ? '' : 'disabled'}>🪙 ${t('awClaim')}${ac > 0 ? ' +' + ac : ''}</button></section>`;
+}
+
 function rulesView() {
   return `<header><div class="top"><img class="logo" src="maxim-logo.png" alt="maxim">${langSw()}</div><h1>${t('rulesTitle')}</h1></header>
   <section class="card rules"><h2>${t('r_bonus_h')}</h2><p>${t('r_bonus_p')}</p>
@@ -267,8 +270,9 @@ function rulesView() {
 
 function render() {
   app.className = S.legal ? '' : 'off'; document.body.classList.toggle('off', !S.legal);
-  app.innerHTML = (tab === 'home' ? homeView() : rulesView()) + `<nav>
+  app.innerHTML = (tab === 'home' ? homeView() : tab === 'awards' ? awardsView() : rulesView()) + `<nav>
   <a data-t="home" class="${tab === 'home' ? 'on' : ''}"><span>🏠</span>${t('nHome')}</a>
+  <a data-t="awards" class="${tab === 'awards' ? 'on' : ''}"><span>🏆${S.awardClaim > 0 ? '<i class="dot"></i>' : ''}</span>${t('nAwards')}</a>
   <a data-t="rules" class="${tab === 'rules' ? 'on' : ''}"><span>📋</span>${t('nRules')}</a>
   <a href="${TAXSEE_URL}"><span>↩️</span>${t('nBack')}</a></nav>`;
   app.querySelectorAll('[data-t]').forEach(a => a.onclick = () => { tab = a.dataset.t; render(); scrollTo(0, 0); });
