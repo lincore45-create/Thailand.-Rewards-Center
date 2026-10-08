@@ -307,7 +307,7 @@ function rulesView() {
 }
 
 function render() {
-  const grey = !S.legal || S.demo; app.className = grey ? 'off' : ''; document.body.classList.toggle('off', grey);
+  const grey = !S.legal || !!S.demo; app.className = grey ? 'off' : ''; document.body.classList.toggle('off', grey);   // !! — иначе undefined превращает toggle() в переключатель
   app.innerHTML = (tab === 'home' ? homeView() : tab === 'awards' ? awardsView() : rulesView()) + `<nav>
   <a data-t="home" class="${tab === 'home' ? 'on' : ''}"><span>🏠</span>${t('nHome')}</a>
   <a data-t="awards" class="${tab === 'awards' ? 'on' : ''}"><span>🏆${S.awardClaim > 0 ? '<i class="dot"></i>' : ''}</span>${t('nAwards')}</a>
