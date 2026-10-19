@@ -368,7 +368,7 @@ function homeView() {
   ${S.demo ? `<div class="demo-banner">🔔 ${t('demoBanner')}</div>` : ''}
   ${S.brand && S.brand.needUni ? `<div class="demo-banner" style="margin-top:-34px">🛵 ${t('needUni')}</div>` : ''}
   <section class="card"><div class="row"><div class="gift">🎁</div><div><h2>${t('bonusTitle')}</h2><span class="mut">${esc(S.cityName)}</span></div></div>
-  ${tiers.length ? bar(0, tiers) : ''}
+  ${tiers.length ? bar(td.o || 0, tiers) : ''}
   <div class="today"><div class="yh"><b>${t('yday')}</b><span class="mut">${fmtDay(S.dataDate || td.d)}</span></div>
   <div class="ys"><div><b>${td.o}</b><span>${t('orders')}</span></div><div><b>${money(td.s)}</b><span>${t('yAmt')}</span></div>${td.nb ? `<div><b>—</b><span class="warn-t">${t('nbShort')}</span></div>` : `<div><b>${td.pct}%</b><span>${t('yBon')} · ${money(td.coins)}</span></div>`}</div>
   ${td.nb ? `<p class="mut warn-t" style="margin-top:10px">⚠️ ${t('nbNote', { d: fmtDay(S.dataDate || td.d) })}</p>` : `<p class="mut" style="margin-top:10px">${next ? t('lastNext', { n: next[0] - td.o, p: next[1] }) : t('maxLevel')}</p>`}</div>
@@ -460,7 +460,7 @@ function render() {
   });
   app.querySelectorAll('[data-buy]').forEach(b => b.onclick = () => {
     const p = S.packs[b.dataset.buy];
-    if (confirm(t('confirmBuy', { c: p[1], h: hrs(p[0]) }))) run({ a: 'buy', i: +b.dataset.buy }, 'okBuy', b)();
+    ask(t('exchange'), t('confirmBuy', { c: p[1], h: hrs(p[0]) }), t('exchange'), t('adsNo'), run({ a: 'buy', i: +b.dataset.buy }, 'okBuy', b));
   });
   if ($('#out')) $('#out').onclick = () => { ls.del('sess'); ls.del('last'); sess = S = null; document.body.classList.remove('off'); app.className = ''; loginView(); };
 }
