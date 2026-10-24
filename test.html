@@ -241,7 +241,7 @@ const t = (k, v) => { let s = T[L][k] ?? T.ru[k] ?? k; for (const x in v) s = s.
 const ERR = { 'Введите номер телефона': 'ePin', 'Введите 5 цифр': 'ePin', 'Номер не найден. Проверьте цифры': 'eNF', 'Номер не найден': 'eNF', 'Бонусы недоступны без общественных водительских прав': 'eNoPdl', 'Пока нечего получать': 'eNothing', 'Пакет не найден': 'eNoPack', 'Недостаточно монет': 'eNoCoins', 'Нет монет для вывода': 'eNoCoins', 'ID не найден': 'eNoId', 'Уже подтверждено': 'eBrOk', 'Заявка уже отправлена': 'eBrSent', 'Цена изменилась': 'ePrice' };
 const STK = { 'Новая': 'new', 'В работе': 'work', 'Выполнена': 'done', 'Отклонена': 'rej' };
 const emsg = e => e instanceof TypeError ? 'eNet' : e.message;
-const errText = m => m.startsWith('eServer|') ? t('eServer') + ' — ' + m.slice(8) : t(ERR[m] || m);
+const errText = m => m.startsWith('eServer|') ? t('eServer') : t(ERR[m] || m);
 
 let sess = null, S = null, tab = 'home', busy = false, choose = null, idCtx = null, demoCtx = null, lastErr = '';
 const $ = s => document.querySelector(s), app = $('#app');
@@ -266,11 +266,17 @@ async function call(body) {
   loading(1);
   try {
     const payload = JSON.stringify({ ...sess, ...body, rid: Date.now().toString(36) + Math.random().toString(36).slice(2, 8) });   // rid: повтор того же действия не выполнится дважды
-    const r = await fetch(API, { method: 'POST', body: payload });   // text/plain → без preflight
-    let raw = await r.text();
-    // если браузер превратил POST в GET (Google иногда перенаправляет запрос), сервер отвечает «OK: API работает…» — повторяем запросом GET
-    if (/^OK: API/.test(raw.trim())) { try { raw = await (await fetch(API + '?q=' + encodeURIComponent(payload))).text(); } catch (e) {} }
-    let j; try { j = JSON.parse(raw); } catch (e) { const snip = raw.replace(/<style[\s\S]*?<\/style>|<script[\s\S]*?<\/script>/gi, ' ').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 160); console.error('API вернул не JSON:', snip); throw new Error('eServer|' + snip); }
+    // Google иногда отвечает своей HTML-страницей-ошибкой («не удалось открыть файл»): тот же запрос (с тем же rid) повторяем до 3 раз
+    let j, snip = '';
+    for (let n = 0; n < 3 && !j; n++) {
+      if (n) await new Promise(r => setTimeout(r, 1200 * n));
+      const r = await fetch(API, { method: 'POST', body: payload });   // text/plain → без preflight
+      let raw = await r.text();
+      // если браузер превратил POST в GET (Google иногда перенаправляет запрос), сервер отвечает «OK: API работает…» — повторяем запросом GET
+      if (/^OK: API/.test(raw.trim())) { try { raw = await (await fetch(API + '?q=' + encodeURIComponent(payload))).text(); } catch (e) {} }
+      try { j = JSON.parse(raw); } catch (e) { snip = raw.replace(/<style[\s\S]*?<\/style>|<script[\s\S]*?<\/script>/gi, ' ').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 160); console.error('API вернул не JSON:', snip); }
+    }
+    if (!j) throw new Error('eServer|');
     if (j.error) throw new Error(j.error);
     return j;
   } finally { loading(0); }
