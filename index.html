@@ -317,6 +317,9 @@ function normPhone(s) {
 // заставка показывается, только если на экране ещё нет данных (первый запуск, давний перерыв) и ответ задерживается дольше 0,35 с
 let spTimers = [], spT = null, syncOk = false;
 const spBar = p => { const i = document.querySelector('.sp-bar i'); if (i) i.style.width = p + '%'; };
+// на время Хэллоуина — тематическая заставка (даты по Бангкоку, включительно)
+const SPLASH_ALT = { from: '2026-10-26', to: '2026-11-02', img: 'ui/splash-hal.webp' };
+{ const d = new Date(Date.now() + 7 * 36e5).toISOString().slice(0, 10); if (d >= SPLASH_ALT.from && d <= SPLASH_ALT.to) { $('#splash').style.backgroundImage = 'url(' + SPLASH_ALT.img + ')'; const im = new Image(); im.src = SPLASH_ALT.img; } }
 const spTxt = s => { $('#splash .sp-t').textContent = s; };
 function splashShow(d = 350) {
   if (spT || !$('#splash').hidden) return;
