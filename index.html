@@ -71,7 +71,7 @@ details{margin:8px 0;background:#f4f4f7;border-radius:12px;padding:10px 12px}sum
 .st{border-radius:20px;padding:2px 10px;font-size:12px;font-weight:700;background:#eee;height:fit-content;white-space:nowrap}
 .st.new{background:#e0ecff;color:#1d4ed8}.st.work{background:#fff1c2;color:#8a6100}.st.done{background:#d9f5e3;color:var(--ok)}.st.rej{background:#fde0e4;color:var(--bad)}
 .warn{background:#ffe3e6;border-radius:20px;margin:12px;padding:16px}
-.warn .btn{background:var(--bad);color:#fff}
+.warn .btn{background:var(--bad);color:#fff}.warn+.card{margin-top:12px}.warn a{text-decoration:none}
 .off .btn:not(.keep),.off .btn:not(.keep):disabled{background:#d9d9de;color:#888;pointer-events:none}
 .off .today{background:#eee}.off .gift{filter:grayscale(1)}.off .coin,.off .cn{filter:grayscale(1)}.off .bar>i,.off .bar>b.on{background:#bbb;border-color:#bbb}
 .lang{display:flex;gap:2px;background:#ffffffcc;border-radius:20px;padding:3px}
@@ -132,6 +132,17 @@ nav .dot{position:absolute;top:0;right:-6px;width:10px;height:10px;border-radius
 .sp-t{margin-top:12px;font-size:14px;color:#5b5a50;text-align:center;min-height:20px}
 #chip{position:fixed;top:calc(env(safe-area-inset-top,0px) + 8px);left:50%;transform:translate(-50%,-80px);background:var(--ink);color:#fff;font-size:13px;padding:7px 16px;border-radius:20px;z-index:30;transition:transform .25s;pointer-events:none;white-space:nowrap}
 #chip.on{transform:translate(-50%,0)}#chip.ok{background:var(--ok)}
+
+/* поток новичка */
+.nbtag{display:inline-block;background:#1c1c21;color:var(--y);border-radius:999px;padding:3px 10px;font-size:12px;font-weight:800;letter-spacing:.4px;margin-right:8px}
+.nbres{background:linear-gradient(135deg,#23262d,#3a3318);color:#fff}.nbres .mut{color:#c9cbd3}
+.nbres .amt{display:flex;align-items:center;gap:10px;font-size:44px;font-weight:800;color:var(--y);margin:10px 0 4px}.nbres .amt .coin{width:44px;height:44px}
+.nbres .lk{float:right;background:#ffffff22;border-radius:999px;padding:3px 10px;font-size:12px;font-weight:700}
+.seg{display:flex;gap:4px;margin:12px 0 6px}.seg i{flex:1;height:8px;border-radius:6px;background:#ffffff2b}.seg i.on{background:var(--y)}
+.stp{display:flex;gap:10px;align-items:flex-start;padding:9px 10px;border-radius:12px;margin-top:6px;font-size:14px}.stp b{flex:none;width:24px;height:24px;border-radius:50%;background:#e8e8e4;color:#555;display:flex;align-items:center;justify-content:center;font-size:13px}
+.stp.on{background:var(--y2);font-weight:700}.stp.on b{background:var(--y);color:#1c1c21}.stp.dn b{background:var(--ok);color:#fff}
+.nbback{background:#e8f4ff;border:1px solid #bcd9f5}.nbwarn{background:#fff6da;border:1px solid #f0d87a;color:#7a5c00;font-size:14px}
+.nbunlock{background:linear-gradient(135deg,#fff3b8,#ffd91a)}.nbunlock h2{margin-bottom:8px}
 </style>
 </head>
 <body>
@@ -160,7 +171,7 @@ ru: { eServer:'Сервер временно недоступен. Попроб�
  nextCoins:'Следующие монеты через', nextCoinsNote:'(с 9:00 по Бангкоку)', orders:'заказов',
  yourCoins:'Ваши монеты', coinsHint:'Обменивайте на пакеты бесплатной комиссии', exchange:'Обменять',
  wdTitle:'Вывод на баланс Taxsee Driver', wdNote:'Монеты, собранные за неделю и не потраченные до конца понедельника, будут выплачены на баланс Taxsee Driver во вторник. Бонусы, не собранные к этому времени, сгорают.', wdLeft:'Осталось на сбор и обмен:', wdPaid:'Отправлено на выплату за прошлую неделю ({w}):', wdPaidNote:'Сумма зачисляется на баланс Taxsee Driver.', saleEnd:'До конца скидки:', ePrice:'Цена пакета изменилась. Проверьте новую цену и повторите', seaLabel:'Сезонная кампания', seaTo:'до {d}', sea_hal:'Хэллоуин', sea_ny:'Новый год', aw_hal25:'25 заказов в кампанию Хэллоуин', aw_hal50:'50 заказов в кампанию Хэллоуин', aw_hal100:'100 заказов в кампанию Хэллоуин', aw_ny25:'25 заказов в новогоднюю кампанию', aw_ny50:'50 заказов в новогоднюю кампанию', aw_ny100:'100 заказов в новогоднюю кампанию', spl1:'Подключаемся…', spl2:'Загружаем ваши данные…', spl3:'Почти готово…', splSlow:'Связь медленная — подождите ещё немного', syncing:'Обновляем данные…', synced:'✓ Данные обновлены', r_sea_h:'Сезонные награды', r_sea1:'В праздничные кампании (Хэллоуин, Новый год) появляются дополнительные награды за заказы в период кампании. Они выдаются вручную, монеты за них собираются так же, как за обычные награды.', r_sale_h:'Скидки на пакеты', r_sale1:'Иногда на пакеты действует скидка. Цена со скидкой и время до её окончания видны в блоке обмена монет.',
- myReqs:'Мои заявки', reqMore:'Показать ещё', reqLess:'Свернуть', pdlTitle:'❗ Хотите участвовать в программе?', pdlText:'Без общественных водительских прав вы пока не можете получать бонусы и монеты.', pdlBtn:'Загрузить общественные водительские права',
+ myReqs:'Мои заявки', reqMore:'Показать ещё', reqLess:'Свернуть', adsNoPdl:'Заявка на брендирование доступна после загрузки общественных водительских прав.', nbTag:'НОВИЧОК', nbWelcome:'Добро пожаловать в Maxim!', nbChooseHint:'Мы пока не нашли ваш номер среди водителей — значит, вы только начинаете. Выберите свой город, и мы зарезервируем для вас стартовые монеты', nbResTitle:'Зарезервировано для вас', nbLocked:'🔒 Заблокировано', nbResText:'Выполните первый заказ — и эти монеты станут вашими', nbLeft:'Резерв действует ещё {n}', nbHow:'Как забрать монеты', nbS0:'Вы зарегистрированы в приложении', nbS1:'Выполните хотя бы один заказ в Taxsee Driver', nbS2:'На следующий день около 9:00 заказ проверят ИИ и сотрудники Maxim', nbS3:'Зайдите сюда снова и нажмите «Забрать»', nbBack:'Выполнили заказ сегодня? Возвращайтесь завтра, {d}, после 9:00', nbAdd:'Добавить на главный экран', nbAddHow:'Откройте меню браузера (⋮ или «Поделиться») и выберите «Добавить на главный экран»', nbOpenTx:'Открыть Taxsee Driver', nbFoot:'1 монета = 1 бат. Заказы проверяются ИИ и сотрудниками компании', nbNoOrders:'Пока не видим ваших заказов. Данные за вчерашний день появляются здесь каждый день около 9:00', nbExpT:'Как начать получать бонусы', nbExpText:'Срок стартового резерва закончился, но бонусы за заказы по-прежнему доступны', nbE1:'Выполняйте заказы в Taxsee Driver', nbE2:'На следующий день около 9:00 данные появятся здесь', nbE3:'Загрузите общественные водительские права, чтобы получать ежедневные бонусы', nbUnlockT:'Первый заказ засчитан! Ваши {n} монет разблокированы', nbTake:'Забрать', pdlTitle:'❗ Хотите участвовать в программе?', pdlText:'Без общественных водительских прав вы пока не можете получать ежедневные бонусы за заказы и бонус за брендирование. Награды и обмен монет на пакеты комиссии вам доступны.', pdlBtn:'Загрузить общественные водительские права',
  logout:'Выйти', nHome:'Главная', nRules:'Правила акции', actTx:'Активировать мои покупки в Taxsee Driver',
  ud:'д', uh:'ч', um:'мин', hour1:'час', hour2:'часа', hour5:'часов',
  st_new:'Новая', st_work:'В работе', st_done:'Выполнена', st_rej:'Отклонена', pkgReq:'Пакет {h}', wdReq:'Вывод на Taxsee Driver',
@@ -176,7 +187,7 @@ ru: { eServer:'Сервер временно недоступен. Попроб�
  r_car_h:'Водителям автомобилей', r_car1:'Нужны общественные водительские права или права категорий ท.1–ท.4 (в общественном формате).',
  r_fraud:'Компания вправе отменить бонус, если обнаружит мошенничество или фиктивные заказы.',
  nbShort:'нет бонуса', nbNote:'Бонус за {d} не начислен. Возможно, не выполнены условия программы (например, не пройдена фотоверификация). Свяжитесь с офисом Maxim.',
-  nAds:'Реклама', adsTitle:'Бонусы за рекламу', adsIntro:'Реклама Maxim на вашем транспорте даёт дополнительный приоритет при назначении на заказы.', adsCarT:'Наклейки Maxim на автомобиле', adsCarD:'Приоритет при назначении на заказы и дополнительные {p}% от суммы выполненных заказов — монетами.', adsUniT:'Униформа Maxim для байкеров', adsUniD:'Приоритет при назначении на заказы. Водителям мотоциклов униформа обязательна для получения ежедневных бонусов за заказы.', nameCar:'Наклейка на автомобиль', nameUni:'Униформа', bs_none:'Отсутствует',bs_office:'Ждем вас в офисе', bs_sent:'Заявка отправлена', bs_ok:'Подтвержден', adsApply:'Подать заявку', adsAskT:'Заявка на брендирование', adsAsk:'Хотите подать заявку: «{n}»?', adsYes:'Подать заявку', adsNo:'Отмена', adsSentT:'Готово', adsSent:'Заявка отправлена в офис. Сотрудники Maxim свяжутся с вами', adsDemo:'Вас пока нет в базе водителей, поэтому подать заявку нельзя.', brT:'Бонус за наклейку', brD:'{p}% от суммы заказов за каждый день, когда вы были легальны. Собирайте монеты так же, как бонус за заказы — до конца понедельника.', adsClaim:'Собрать монеты', needUni:'Водителям мотоциклов для получения бонусов за заказы нужна униформа Maxim. Подайте заявку во вкладке «Реклама».', lgNote:'в том числе {n} (приветственный и перенесённый бонус) — они не сгорают и остаются на балансе', eBrOk:'Уже подтверждено', eBrSent:'Заявка уже отправлена', r_ads_h:'Реклама Maxim' },
+  nAds:'Реклама', adsTitle:'Бонусы за рекламу', adsIntro:'Реклама Maxim на вашем транспорте даёт дополнительный приоритет при назначении на заказы.', adsCarT:'Наклейки Maxim на автомобиле', adsCarD:'Приоритет при назначении на заказы и дополнительные {p}% от суммы выполненных заказов — монетами.', adsUniT:'Униформа Maxim для байкеров', adsUniD:'Приоритет при назначении на заказы. Водителям мотоциклов униформа обязательна для получения ежедневных бонусов за заказы.', nameCar:'Наклейка на автомобиль', nameUni:'Униформа', bs_none:'Отсутствует',bs_office:'Ждем вас в офисе', bs_sent:'Заявка отправлена', bs_ok:'Подтвержден', adsApply:'Подать заявку', adsAskT:'Заявка на брендирование', adsAsk:'Хотите подать заявку: «{n}»?', adsYes:'Подать заявку', adsNo:'Отмена', adsSentT:'Готово', adsSent:'Заявка отправлена в офис. Сотрудники Maxim свяжутся с вами', adsDemo:'Вас пока нет в базе водителей, поэтому подать заявку нельзя.', brT:'Бонус за наклейку', brD:'{p}% от суммы заказов за каждый день, когда вы были легальны. Собирайте монеты так же, как бонус за заказы — до конца понедельника.', adsClaim:'Собрать монеты', needUni:'Водителям мотоциклов для получения бонусов за заказы нужна униформа Maxim. Подайте заявку во вкладке «Реклама».', lgNote:'в том числе {n} (стартовые, перенесённые и призовые монеты) — они не сгорают и остаются на балансе', eBrOk:'Уже подтверждено', eBrSent:'Заявка уже отправлена', r_ads_h:'Реклама Maxim' },
 en: { eServer:'Server is temporarily unavailable. Please try again in a minute',chooseDemoHint:"Your number isn't in the system yet. Choose your city to see how the app works.", demoTitle:'Demo mode', demoText:"You're not in the drivers' database yet. Complete at least one order — your stats will appear here after the next data update. For now you can explore how the app works.", demoOk:'Got it', demoBanner:"This is demo mode. Complete at least one order to see your stats after the next data update.", welTitle:'Welcome to the updated Maxim Rewards Center', welTextLegal:'You can earn coins for completed orders. You can collect them the day after completing the orders. Spend your coins on commission-free packages or transfer them to your Taxsee Driver balance. Here are 25 coins as a welcome gift!', welTextIllegal:'To join the program and earn up to 10,990 baht extra per month, you need a public driver\'s license.', go2:'OK',idTitle:'Enter your ID', idHint:'Several drivers in your city share this number. Enter your Maxim login (ID).', eNoId:'ID not found. Please check and try again', nAwards:'Awards', awTitle:'Driver awards', awHint:'Each award gives you {n} coins, once', awCount:'Awards earned: {a} of {b}', awClaim:'Get coins for awards', aw_month:'Driver of the month', aw_year:'Driver of the year', aw_hero:'Hero driver', aw_o100:'First 100 orders', aw_o500:'First 500 orders', aw_o1000:'First 1,000 orders', aw_km1k:'1,000 km with Maxim', aw_km10k:'10,000 km with Maxim', aw_km100k:'100,000 km with Maxim', r_aw:'For each driver award you can collect {n} coins once.', title:'Your Rewards', tag:'More orders — more earnings — more savings', loginHint:'Enter the phone number linked to Maxim', go:'Log in',
  chooseCity:'Choose your city', chooseHint:'Several drivers share this number', back:'Back', bonusTitle:'Order bonus', todayDone:'Completed today', forSum:'worth',
  todayBonus:'Bonus for this day', moreTo:'{n} more orders to reach the {p}% bonus', lastNext:'{n} more orders were needed for the {p}% bonus', lastDay:'Results for {d}', yday:"Yesterday's progress", yAmt:'Order value', yBon:'Bonus',
@@ -188,7 +199,7 @@ en: { eServer:'Server is temporarily unavailable. Please try again in a minute',
  nextCoins:'Next coins available in', nextCoinsNote:'(from 9:00 Bangkok time)', orders:'orders',
  yourCoins:'Your coins', coinsHint:'Exchange for free-commission packages', exchange:'Exchange',
  wdTitle:'Transfer to Taxsee Driver balance', wdNote:'Coins you collect this week and do not spend by the end of Monday will be paid out to your Taxsee Driver balance on Tuesday. Bonuses not collected by then expire.', wdLeft:'Time left to collect and exchange:', wdPaid:'Sent for payout for last week ({w}):', wdPaidNote:'The amount is credited to your Taxsee Driver balance.', saleEnd:'Sale ends in:', ePrice:'The package price has changed. Check the new price and try again', seaLabel:'Seasonal campaign', seaTo:'until {d}', sea_hal:'Halloween', sea_ny:'New Year', aw_hal25:'25 orders during the Halloween campaign', aw_hal50:'50 orders during the Halloween campaign', aw_hal100:'100 orders during the Halloween campaign', aw_ny25:'25 orders during the New Year campaign', aw_ny50:'50 orders during the New Year campaign', aw_ny100:'100 orders during the New Year campaign', spl1:'Connecting…', spl2:'Loading your data…', spl3:'Almost there…', splSlow:'The connection is slow — please wait a little longer', syncing:'Updating data…', synced:'✓ Data updated', r_sea_h:'Seasonal awards', r_sea1:'During holiday campaigns (Halloween, New Year) extra awards for orders made during the campaign appear. They are granted manually, and their coins are collected the same way as for regular awards.', r_sale_h:'Package discounts', r_sale1:'Sometimes packages are discounted. The discounted price and the time left are shown in the coin exchange block.',
- myReqs:'My requests', reqMore:'Show more', reqLess:'Show less', pdlTitle:'❗ Want to join the program?', pdlText:"Without a public driver's license you can't receive bonuses and coins yet.", pdlBtn:"Upload public driver's license",
+ myReqs:'My requests', reqMore:'Show more', reqLess:'Show less', adsNoPdl:'A branding request is available after you upload your public driver\'s license.', nbTag:'NEWCOMER', nbWelcome:'Welcome to Maxim!', nbChooseHint:'We could not find your number among our drivers, so you are just getting started. Choose your city and we will reserve starter coins for you', nbResTitle:'Reserved for you', nbLocked:'🔒 Locked', nbResText:'Complete your first order and these coins are yours', nbLeft:'Reserve is valid for {n} more', nbHow:'How to get your coins', nbS0:'You are registered in the app', nbS1:'Complete at least one order in Taxsee Driver', nbS2:'The next day around 9:00 AM the order is checked by AI and Maxim staff', nbS3:'Come back here and tap “Collect”', nbBack:'Did an order today? Come back tomorrow, {d}, after 9:00 AM', nbAdd:'Add to home screen', nbAddHow:'Open the browser menu (⋮ or Share) and choose “Add to Home screen”', nbOpenTx:'Open Taxsee Driver', nbFoot:'1 coin = 1 baht. Orders are verified by AI and company staff', nbNoOrders:'We do not see your orders yet. Yesterday’s data appears here every day around 9:00 AM', nbExpT:'How to start earning bonuses', nbExpText:'The starter reserve has ended, but order bonuses are still available', nbE1:'Complete orders in Taxsee Driver', nbE2:'The next day around 9:00 AM your data appears here', nbE3:'Upload your public driver\'s license to receive daily bonuses', nbUnlockT:'First order counted! Your {n} coins are unlocked', nbTake:'Collect', pdlTitle:'❗ Want to join the program?', pdlText:"Without a public driver's license you can't receive daily order bonuses and the branding bonus yet. Awards and exchanging coins for commission packages are available to you.", pdlBtn:"Upload public driver's license",
  logout:'Log out', nHome:'Home', nRules:'Program rules', actTx:'Activate my purchases in Taxsee Driver',
  ud:'d', uh:'h', um:'min', hour1:'hour', hour2:'hours', hour5:'hours',
  st_new:'New', st_work:'In progress', st_done:'Completed', st_rej:'Rejected', pkgReq:'Package {h}', wdReq:'Transfer to Taxsee Driver',
@@ -204,7 +215,7 @@ en: { eServer:'Server is temporarily unavailable. Please try again in a minute',
  r_car_h:'Car drivers', r_car1:"A public driver's license or a T.1–T.4 license (public type) is required.",
  r_fraud:'The company reserves the right to cancel bonuses if fraud or faked orders are found.',
  nbShort:'no bonus', nbNote:'No bonus was credited for {d}. The program requirements may not have been met (for example, photo verification was not completed). Please contact the Maxim office.',
-  nAds:'Branding', adsTitle:'Branding bonuses', adsIntro:'Maxim branding on your vehicle gives you extra priority when orders are assigned.', adsCarT:'Maxim stickers on your car', adsCarD:'Priority in order assignment, plus an extra {p}% of the value of your completed orders, paid in coins.', adsUniT:'Maxim uniform for motorcycle drivers', adsUniD:'Priority in order assignment. Motorcycle drivers must wear the uniform to receive daily order bonuses.', nameCar:'Car sticker', nameUni:'Uniform', bs_none:'Missing',bs_office:'We are waiting for you at the office', bs_sent:'Request sent', bs_ok:'Confirmed', adsApply:'Apply', adsAskT:'Branding request', adsAsk:'Would you like to apply for “{n}”?', adsYes:'Apply', adsNo:'Cancel', adsSentT:'Done', adsSent:'Your request has been sent to the office. Maxim staff will contact you', adsDemo:'You are not in the driver database yet, so you can\'t submit a request.', brT:'Sticker bonus', brD:'{p}% of the value of your orders for every day you were eligible. Collect the coins the same way as the order bonus — until the end of Monday.', adsClaim:'Collect coins', needUni:'Motorcycle drivers need the Maxim uniform to receive order bonuses. Submit a request in the “Branding” tab.', lgNote:'including {n} (welcome and carried-over bonus) — they do not expire and stay on your balance', eBrOk:'Already confirmed', eBrSent:'Request already sent', r_ads_h:'Maxim branding' },
+  nAds:'Branding', adsTitle:'Branding bonuses', adsIntro:'Maxim branding on your vehicle gives you extra priority when orders are assigned.', adsCarT:'Maxim stickers on your car', adsCarD:'Priority in order assignment, plus an extra {p}% of the value of your completed orders, paid in coins.', adsUniT:'Maxim uniform for motorcycle drivers', adsUniD:'Priority in order assignment. Motorcycle drivers must wear the uniform to receive daily order bonuses.', nameCar:'Car sticker', nameUni:'Uniform', bs_none:'Missing',bs_office:'We are waiting for you at the office', bs_sent:'Request sent', bs_ok:'Confirmed', adsApply:'Apply', adsAskT:'Branding request', adsAsk:'Would you like to apply for “{n}”?', adsYes:'Apply', adsNo:'Cancel', adsSentT:'Done', adsSent:'Your request has been sent to the office. Maxim staff will contact you', adsDemo:'You are not in the driver database yet, so you can\'t submit a request.', brT:'Sticker bonus', brD:'{p}% of the value of your orders for every day you were eligible. Collect the coins the same way as the order bonus — until the end of Monday.', adsClaim:'Collect coins', needUni:'Motorcycle drivers need the Maxim uniform to receive order bonuses. Submit a request in the “Branding” tab.', lgNote:'including {n} (starter, carried-over and award coins) — they do not expire and stay on your balance', eBrOk:'Already confirmed', eBrSent:'Request already sent', r_ads_h:'Maxim branding' },
 th: { eServer:'ระบบขัดข้องชั่วคราว กรุณาลองใหม่อีกครั้งในอีกสักครู่',chooseDemoHint:'ยังไม่พบเบอร์ของคุณในระบบ กรุณาเลือกเมืองเพื่อดูการทำงานของแอป', demoTitle:'โหมดทดลองใช้งาน', demoText:'บัญชีของคุณยังไม่อยู่ในฐานข้อมูลคนขับ เพียงรับงานสำเร็จอย่างน้อย 1 ออเดอร์ สถิติของคุณจะแสดงที่นี่หลังการอัปเดตระบบ ระหว่างนี้คุณสามารถลองสำรวจฟังก์ชันต่างๆ ได้', demoOk:'เข้าใจแล้ว', demoBanner:'ขณะนี้อยู่ในโหมดทดลองใช้งาน กรุณารับออเดอร์สำเร็จอย่างน้อย 1 งานเพื่อดูข้อมูลสถิติในการอัปเดตครั้งถัดไป', welTitle:'ยินดีต้อนรับสู่ Rewards Center โฉมใหม่จาก Maxim', welTextLegal:'คุณสามารถสะสมเหรียญได้จากทุกออเดอร์ที่ทำสำเร็จ โดยกดรับเหรียญได้ในวันถัดไป เหรียญนี้สามารถนำไปแลกแพ็กเกจฟรีค่าคอมฯ หรือโอนเข้ากระเป๋าเงิน Taxsee Driver ได้ เราขอมอบ 25 เหรียญเป็นของขวัญต้อนรับ!', welTextIllegal:'หากต้องการเข้าร่วมโปรแกรมเพื่อรับรายได้พิเศษสูงสุด 10,990 บาท/เดือน จำเป็นต้องมีใบขับขี่สาธารณะ', go2:'ตกลง',idTitle:'กรอก ID ของคุณ', idHint:'เบอร์นี้ตรงกับคนขับหลายคนในเมืองของคุณ กรุณากรอกล็อกอิน (ID) ของคุณใน Maxim', eNoId:'ไม่พบ ID นี้ กรุณาตรวจสอบและลองใหม่อีกครั้ง', nAwards:'รางวัล', awTitle:'เหรียญรางวัลคนขับ', awHint:'รับ {n} เหรียญต่อ 1 รางวัล (ครั้งเดียว)', awCount:'ได้รับรางวัลแล้ว {a} จาก {b}', awClaim:'รับเหรียญจากรางวัล', aw_month:'คนขับดีเด่นประจำเดือน', aw_year:'คนขับดีเด่นประจำปี', aw_hero:'คนขับฮีโร่', aw_o100:'พิชิต 100 ออเดอร์แรก', aw_o500:'พิชิต 500 ออเดอร์แรก', aw_o1000:'พิชิต 1,000 ออเดอร์แรก', aw_km1k:'วิ่งงานสะสม 1,000 กม. กับ Maxim', aw_km10k:'วิ่งงานสะสม 10,000 กม. กับ Maxim', aw_km100k:'วิ่งงานสะสม 100,000 กม. กับ Maxim', r_aw:'รับ {n} เหรียญต่อรางวัล 1 รางวัล (ครั้งเดียว)', title:'รางวัลของคุณ', tag:'ยิ่งรับงานมาก ยิ่งสร้างรายได้และประหยัดได้มากขึ้น', loginHint:'กรอกหมายเลขโทรศัพท์ที่ลงทะเบียนไว้กับ Maxim', go:'เข้าสู่ระบบ',
  chooseCity:'เลือกเมือง', chooseHint:'เบอร์นี้ตรงกับคนขับหลายคน', back:'ย้อนกลับ', bonusTitle:'โบนัสจากออเดอร์', todayDone:'วันนี้ทำได้', forSum:'มูลค่ารวม',
  todayBonus:'โบนัสของวันนั้น', moreTo:'อีก {n} ออเดอร์ รับโบนัส {p}%', lastNext:'ขาดอีก {n} ออเดอร์ จึงจะได้โบนัส {p}%', lastDay:'สรุปของวันที่ {d}', yday:'สรุปความคืบหน้าของเมื่อวาน', yAmt:'มูลค่าออเดอร์', yBon:'โบนัส',
@@ -216,7 +227,7 @@ th: { eServer:'ระบบขัดข้องชั่วคราว กร�
  nextCoins:'รับเหรียญครั้งถัดไปในอีก', nextCoinsNote:'(ตั้งแต่ 9:00 น. เวลากรุงเทพฯ)', orders:'ออเดอร์',
  yourCoins:'เหรียญของคุณ', coinsHint:'แลกรับแพ็กเกจฟรีค่าคอมมิชชัน', exchange:'แลก',
  wdTitle:'โอนเงินเข้ากระเป๋า Taxsee Driver', wdNote:'เหรียญที่กดรับในสัปดาห์นี้และยังไม่ได้ใช้ภายในวันจันทร์ ระบบจะโอนเปลี่ยนเป็นเงินเข้ากระเป๋า Taxsee Driver ให้ในวันอังคาร ส่วนโบนัสที่ไม่ได้กดรับจะหมดอายุ', wdLeft:'ระยะเวลาที่เหลือในการกดรับและแลกสิทธิ์:', wdPaid:'ส่งเพื่อโอนเงินสำหรับสัปดาห์ที่แล้ว ({w}):', wdPaidNote:'ยอดนี้จะเข้ากระเป๋า Taxsee Driver ของคุณ', saleEnd:'ส่วนลดจะสิ้นสุดใน:', ePrice:'ราคาแพ็กเกจเปลี่ยนแปลง กรุณาตรวจสอบราคาใหม่แล้วลองอีกครั้ง', seaLabel:'แคมเปญตามเทศกาล', seaTo:'ถึง {d}', sea_hal:'ฮาโลวีน', sea_ny:'เทศกาลปีใหม่', aw_hal25:'25 ออเดอร์ ช่วงฮาโลวีน', aw_hal50:'50 ออเดอร์ ช่วงฮาโลวีน', aw_hal100:'100 ออเดอร์ ช่วงฮาโลวีน', aw_ny25:'25 ออเดอร์ ช่วงเทศกาลปีใหม่', aw_ny50:'50 ออเดอร์ ช่วงเทศกาลปีใหม่', aw_ny100:'100 ออเดอร์ ช่วงเทศกาลปีใหม่', spl1:'กำลังเชื่อมต่อ…', spl2:'กำลังโหลดข้อมูลของคุณ…', spl3:'เกือบเสร็จแล้ว…', splSlow:'การเชื่อมต่อช้า กรุณารอสักครู่', syncing:'กำลังอัปเดตข้อมูล…', synced:'✓ อัปเดตข้อมูลแล้ว', r_sea_h:'รางวัลตามเทศกาล', r_sea1:'ในช่วงแคมเปญเทศกาล (ฮาโลวีน ปีใหม่) จะมีรางวัลเพิ่มเติมสำหรับออเดอร์ที่ทำในช่วงแคมเปญ รางวัลจะมอบให้ด้วยตนเองโดยเจ้าหน้าที่ และกดรับเหรียญได้เหมือนรางวัลทั่วไป', r_sale_h:'ส่วนลดแพ็กเกจ', r_sale1:'บางช่วงแพ็กเกจจะมีส่วนลด ราคาหลังลดและเวลาที่เหลือจะแสดงในส่วนแลกเหรียญ',
- myReqs:'รายการคำขอของฉัน', reqMore:'แสดงเพิ่มเติม', reqLess:'แสดงน้อยลง', pdlTitle:'❗ สนใจเข้าร่วมโปรแกรมใช่ไหม', pdlText:'หากยังไม่มีใบขับขี่สาธารณะ จะยังไม่สามารถรับโบนัสและเหรียญสะสมได้', pdlBtn:'อัปโหลดใบขับขี่สาธารณะ',
+ myReqs:'รายการคำขอของฉัน', reqMore:'แสดงเพิ่มเติม', reqLess:'แสดงน้อยลง', adsNoPdl:'ส่งคำขอสติกเกอร์/ชุดยูนิฟอร์มได้หลังอัปโหลดใบขับขี่สาธารณะ', nbTag:'คนขับใหม่', nbWelcome:'ยินดีต้อนรับสู่ Maxim!', nbChooseHint:'เรายังไม่พบเบอร์ของคุณในรายชื่อคนขับ แสดงว่าคุณเพิ่งเริ่มต้น เลือกเมืองของคุณ แล้วเราจะสำรองเหรียญเริ่มต้นไว้ให้', nbResTitle:'สำรองไว้ให้คุณ', nbLocked:'🔒 ล็อกอยู่', nbResText:'ทำออเดอร์แรกให้สำเร็จ แล้วเหรียญเหล่านี้จะเป็นของคุณ', nbLeft:'สิทธิ์สำรองเหลืออีก {n}', nbHow:'วิธีรับเหรียญ', nbS0:'คุณลงทะเบียนในแอปแล้ว', nbS1:'ทำออเดอร์อย่างน้อย 1 ออเดอร์ใน Taxsee Driver', nbS2:'วันถัดไปประมาณ 09:00 น. AI และเจ้าหน้าที่ Maxim จะตรวจสอบออเดอร์', nbS3:'กลับมาที่นี่แล้วกด “รับ”', nbBack:'ทำออเดอร์วันนี้แล้วใช่ไหม กลับมาพรุ่งนี้ {d} หลัง 09:00 น.', nbAdd:'เพิ่มไปยังหน้าจอหลัก', nbAddHow:'เปิดเมนูของเบราว์เซอร์ (⋮ หรือ แชร์) แล้วเลือก “เพิ่มไปยังหน้าจอหลัก”', nbOpenTx:'เปิด Taxsee Driver', nbFoot:'1 เหรียญ = 1 บาท ออเดอร์ได้รับการตรวจสอบโดย AI และเจ้าหน้าที่บริษัท', nbNoOrders:'ยังไม่พบออเดอร์ของคุณ ข้อมูลของเมื่อวานจะแสดงที่นี่ทุกวันประมาณ 09:00 น.', nbExpT:'วิธีเริ่มรับโบนัส', nbExpText:'ระยะเวลาเหรียญเริ่มต้นสิ้นสุดแล้ว แต่โบนัสจากออเดอร์ยังคงใช้ได้', nbE1:'ทำออเดอร์ใน Taxsee Driver', nbE2:'วันถัดไปประมาณ 09:00 น. ข้อมูลจะแสดงที่นี่', nbE3:'อัปโหลดใบขับขี่สาธารณะเพื่อรับโบนัสรายวัน', nbUnlockT:'นับออเดอร์แรกแล้ว! ปลดล็อกเหรียญ {n} เหรียญของคุณแล้ว', nbTake:'รับ', pdlTitle:'❗ สนใจเข้าร่วมโปรแกรมใช่ไหม', pdlText:'หากยังไม่มีใบขับขี่สาธารณะ จะยังไม่สามารถรับโบนัสรายวันจากออเดอร์และโบนัสสติกเกอร์ได้ แต่ยังรับรางวัลและแลกเหรียญเป็นแพ็กเกจปลอดค่าคอมมิชชันได้', pdlBtn:'อัปโหลดใบขับขี่สาธารณะ',
  logout:'ออกจากระบบ', nHome:'หน้าหลัก', nRules:'กติกา', actTx:'เปิดใช้งานแพ็กเกจที่ซื้อใน Taxsee Driver',
  ud:'วัน', uh:'ชม.', um:'นาที', hour1:'ชั่วโมง', hour2:'ชั่วโมง', hour5:'ชั่วโมง',
  st_new:'รอดำเนินการ', st_work:'กำลังดำเนินการ', st_done:'ดำเนินการสำเร็จ', st_rej:'ไม่ผ่านการอนุมัติ', pkgReq:'แพ็กเกจ {h}', wdReq:'โอนเงินเข้ากระเป๋า Taxsee Driver',
@@ -232,7 +243,7 @@ th: { eServer:'ระบบขัดข้องชั่วคราว กร�
  r_car_h:'สำหรับคนขับรถยนต์', r_car1:'ต้องมีใบขับขี่สาธารณะ หรือใบขับขี่ ท.1-ท.4 (รูปแบบสาธารณะ)',
  r_fraud:'บริษัทขอสงวนสิทธิ์ยกเลิกโบนัสในกรณีพบการทุจริตหรือปลอมแปลงออเดอร์',
  nbShort:'ไม่ได้รับโบนัส', nbNote:'ไม่มียอดโบนัสสะสมสำหรับวันที่ {d} เนื่องจากยังไม่ครบตามเงื่อนไขของโปรแกรม (เช่น ยังไม่ได้ยืนยันตัวตนด้วยรูปถ่าย) สามารถสอบถามเพิ่มเติมได้ที่สำนักงาน Maxim',
-  nAds:'โฆษณา', adsTitle:'โบนัสจากการติดสื่อโฆษณา', adsIntro:'การติดสื่อโฆษณา Maxim บนยานพาหนะของคุณ ช่วยให้คุณได้รับสิทธิ์ลำดับความสำคัญเพิ่มเติมในการจ่ายงาน', adsCarT:'สติกเกอร์ Maxim บนรถยนต์', adsCarD:'ได้รับสิทธิ์ลำดับความสำคัญในการจ่ายงาน และรับเหรียญเพิ่มอีก {p}% ของยอดออเดอร์ที่ทำสำเร็จ', adsUniT:'ชุดยูนิฟอร์ม Maxim สำหรับคนขับรถจักรยานยนต์', adsUniD:'ได้รับสิทธิ์ลำดับความสำคัญในการจ่ายงาน สำหรับคนขับรถจักรยานยนต์ การสวมยูนิฟอร์มเป็นเงื่อนไขในการรับโบนัสรายวันจากออเดอร์', nameCar:'สติกเกอร์ติดรถยนต์', nameUni:'ยูนิฟอร์ม', bs_none:'ไม่มี',bs_office:'รอคุณที่สำนักงาน', bs_sent:'ส่งคำขอแล้ว', bs_ok:'ยืนยันแล้ว', adsApply:'ส่งคำขอ', adsAskT:'คำขอติดสื่อโฆษณา', adsAsk:'ต้องการส่งคำขอ “{n}” หรือไม่?', adsYes:'ส่งคำขอ', adsNo:'ยกเลิก', adsSentT:'เรียบร้อย', adsSent:'ส่งคำขอไปยังสำนักงานแล้ว เจ้าหน้าที่ Maxim จะติดต่อคุณ', adsDemo:'คุณยังไม่มีชื่ออยู่ในฐานข้อมูลคนขับ จึงยังส่งคำขอไม่ได้', brT:'โบนัสสติกเกอร์', brD:'{p}% ของยอดออเดอร์ในแต่ละวันที่คุณมีสิทธิ์ สามารถกดรับเหรียญได้เช่นเดียวกับโบนัสออเดอร์ ภายในสิ้นวันจันทร์', adsClaim:'รับเหรียญ', needUni:'คนขับรถจักรยานยนต์ต้องมียูนิฟอร์ม Maxim จึงจะได้รับโบนัสจากออเดอร์ กรุณาส่งคำขอที่แท็บ “โฆษณา”', lgNote:'รวม {n} เหรียญ (โบนัสต้อนรับและเหรียญที่โอนมา) ซึ่งไม่หมดอายุและยังอยู่ในยอดของคุณ', eBrOk:'ยืนยันแล้ว', eBrSent:'ส่งคำขอแล้ว', r_ads_h:'สื่อโฆษณา Maxim' }
+  nAds:'โฆษณา', adsTitle:'โบนัสจากการติดสื่อโฆษณา', adsIntro:'การติดสื่อโฆษณา Maxim บนยานพาหนะของคุณ ช่วยให้คุณได้รับสิทธิ์ลำดับความสำคัญเพิ่มเติมในการจ่ายงาน', adsCarT:'สติกเกอร์ Maxim บนรถยนต์', adsCarD:'ได้รับสิทธิ์ลำดับความสำคัญในการจ่ายงาน และรับเหรียญเพิ่มอีก {p}% ของยอดออเดอร์ที่ทำสำเร็จ', adsUniT:'ชุดยูนิฟอร์ม Maxim สำหรับคนขับรถจักรยานยนต์', adsUniD:'ได้รับสิทธิ์ลำดับความสำคัญในการจ่ายงาน สำหรับคนขับรถจักรยานยนต์ การสวมยูนิฟอร์มเป็นเงื่อนไขในการรับโบนัสรายวันจากออเดอร์', nameCar:'สติกเกอร์ติดรถยนต์', nameUni:'ยูนิฟอร์ม', bs_none:'ไม่มี',bs_office:'รอคุณที่สำนักงาน', bs_sent:'ส่งคำขอแล้ว', bs_ok:'ยืนยันแล้ว', adsApply:'ส่งคำขอ', adsAskT:'คำขอติดสื่อโฆษณา', adsAsk:'ต้องการส่งคำขอ “{n}” หรือไม่?', adsYes:'ส่งคำขอ', adsNo:'ยกเลิก', adsSentT:'เรียบร้อย', adsSent:'ส่งคำขอไปยังสำนักงานแล้ว เจ้าหน้าที่ Maxim จะติดต่อคุณ', adsDemo:'คุณยังไม่มีชื่ออยู่ในฐานข้อมูลคนขับ จึงยังส่งคำขอไม่ได้', brT:'โบนัสสติกเกอร์', brD:'{p}% ของยอดออเดอร์ในแต่ละวันที่คุณมีสิทธิ์ สามารถกดรับเหรียญได้เช่นเดียวกับโบนัสออเดอร์ ภายในสิ้นวันจันทร์', adsClaim:'รับเหรียญ', needUni:'คนขับรถจักรยานยนต์ต้องมียูนิฟอร์ม Maxim จึงจะได้รับโบนัสจากออเดอร์ กรุณาส่งคำขอที่แท็บ “โฆษณา”', lgNote:'รวม {n} เหรียญ (เหรียญเริ่มต้น เหรียญที่โอนมา และเหรียญรางวัล) ซึ่งไม่หมดอายุและยังอยู่ในยอดของคุณ', eBrOk:'ยืนยันแล้ว', eBrSent:'ส่งคำขอแล้ว', r_ads_h:'สื่อโฆษณา Maxim' }
 };
 const LOC = { ru: 'ru', en: 'en-US', th: 'th-TH' };
 let L = ls.get('lang'); if (!T[L]) L = 'th';
@@ -265,7 +276,7 @@ const loading = on => { pend += on ? 1 : -1; $('#ld').classList.toggle('on', pen
 async function call(body) {
   loading(1);
   try {
-    const payload = JSON.stringify({ ...sess, ...body, rid: Date.now().toString(36) + Math.random().toString(36).slice(2, 8) });   // rid: повтор того же действия не выполнится дважды
+    const payload = JSON.stringify({ ...sess, ...body, v: 2, rid: Date.now().toString(36) + Math.random().toString(36).slice(2, 8) });   // rid: повтор того же действия не выполнится дважды
     // Google иногда отвечает своей HTML-страницей-ошибкой («не удалось открыть файл»): тот же запрос (с тем же rid) повторяем до 3 раз
     let j, snip = '';
     for (let n = 0; n < 3 && !j; n++) {
@@ -291,7 +302,7 @@ const bindLang = () => app.querySelectorAll('[data-l]').forEach(b => b.onclick =
 function setLang(l) {
   const v = ($('#pin') || {}).value || '';
   L = l; ls.set('lang', l); document.documentElement.lang = l; document.title = t('title') + ' — Maxim';
-  S ? render() : idCtx ? idView(idCtx.pin, idCtx.city) : choose ? chooseView(choose.pin, choose.cities) : loginView(lastErr, v);
+  S ? render() : idCtx ? idView(idCtx.pin, idCtx.city) : choose ? chooseView(choose.pin, choose.cities, choose.nb ? 'nb' : false) : loginView(lastErr, v);
 }
 
 /* ---------- Вход ---------- */
@@ -362,12 +373,13 @@ async function startInner(raw, city, login) {
   sess = { pin, city, login };
   try {
     const j = await call({ a: 'state' });
+    if (j.chooseNewbie) { choose = { pin, cities: j.cities, nb: true }; idCtx = null; demoCtx = null; return chooseView(pin, j.cities, 'nb'); }
     if (j.chooseDemo) { demoCtx = { pin, cities: j.cities }; choose = null; idCtx = null; return chooseView(pin, j.cities, true); }
     if (j.choose) { choose = { pin, cities: j.choose }; idCtx = null; return chooseView(pin, j.choose); }
     if (j.needId) { idCtx = { pin, city }; return idView(pin, city); }
     choose = null; idCtx = null; demoCtx = j.demo ? { pin, cities: [city] } : null;
-    sess.city = j.city; ls.set('sess', JSON.stringify(sess)); setState(j); syncOk = true; render();
-    if (j.demo) demoNotice(); else if (j.welcome) welcomeNotice(j.welcome);
+    sess.city = j.city || (j.newbie ? j.newbie.city : undefined); ls.set('sess', JSON.stringify(sess)); setState(j); syncOk = true; render();
+    if (j.demo) demoNotice();
   } catch (e) {
     if (e.message === 'ID не найден') return idView(pin, city, e.message);
     if (S && emsg(e) === 'eNet') return toast(t('eNet'));      // есть сохранённые данные — оставляем их на экране
@@ -386,8 +398,8 @@ function idView(pin, city, err = '') {
   $('#back').onclick = () => { idCtx = null; loginView('', pin); }; bindLang();
 }
 function chooseView(pin, cities, isDemo = false) {
-  app.innerHTML = `<div class="login">${langSw()}<img class="logo" src="maxim-logo.png" alt="maxim"><h1>${t('chooseCity')}</h1>
-  <p class="mut">${isDemo ? t('chooseDemoHint') : t('chooseHint')}</p>
+  app.innerHTML = `<div class="login">${langSw()}<img class="logo" src="maxim-logo.png" alt="maxim"><h1>${isDemo === 'nb' ? t('nbWelcome') : t('chooseCity')}</h1>
+  <p class="mut">${isDemo === 'nb' ? t('nbChooseHint') : isDemo ? t('chooseDemoHint') : t('chooseHint')}</p>
   ${cities.map((c, i) => `<button class="btn" data-i="${i}">${esc(c.replace(/^TH Maxim\s*/i, ''))}</button>`).join('')}
   <button class="out" id="back">${t('back')}</button></div>`;
   app.querySelectorAll('[data-i]').forEach(b => b.onclick = () => { b.classList.add('load'); start(pin, cities[b.dataset.i]); });
@@ -447,14 +459,15 @@ function homeView() {
   <header><div class="top"><img class="logo" src="maxim-logo.png" alt="maxim">${langSw()}</div>
   <h1>${t('title')}</h1><p>${t('tag')}</p></header>
   ${S.demo ? `<div class="demo-banner">🔔 ${t('demoBanner')}</div>` : ''}
+  ${S.nbCard ? `<section class="card nbunlock"><h2>🎉 ${t('nbUnlockT', { n: S.nbCard.coins })}</h2><button class="btn keep" id="nbclaim">${CN}${t('nbTake')} +${S.nbCard.coins}</button></section>` : ''}
   ${S.brand && S.brand.needUni ? `<div class="demo-banner" style="margin-top:-34px">🛵 ${t('needUni')}</div>` : ''}
-  <section class="card"><div class="row"><div class="gift">🎁</div><div><h2>${t('bonusTitle')}</h2><span class="mut">${esc(S.cityName)}</span></div></div>
+  <section class="card${legal || S.demo ? '' : ' off'}"><div class="row"><div class="gift">🎁</div><div><h2>${t('bonusTitle')}</h2><span class="mut">${esc(S.cityName)}</span></div></div>
   ${tiers.length ? bar(td.o || 0, tiers) : ''}
   <div class="today"><div class="yh"><b>${t('yday')}</b><span class="mut">${fmtDay(S.dataDate || td.d)}</span></div>
   <div class="ys"><div><b>${td.o}</b><span>${t('orders')}</span></div><div><b>${money(td.s)}</b><span>${t('yAmt')}</span></div>${td.nb ? `<div><b>—</b><span class="warn-t">${t('nbShort')}</span></div>` : `<div><b>${td.pct}%</b><span>${t('yBon')} · ${money(td.coins)}</span></div>`}</div>
   ${td.nb ? `<p class="mut warn-t" style="margin-top:10px">⚠️ ${t('nbNote', { d: fmtDay(S.dataDate || td.d) })}</p>` : `<p class="mut" style="margin-top:10px">${next ? t('lastNext', { n: next[0] - td.o, p: next[1] }) : t('maxLevel')}</p>`}</div>
   <p class="mut note">ℹ️ ${t('updNote')}</p></section>
-  <section class="card"><h2>${t(S.closing ? 'weekPrev' : 'weekTitle')}</h2>
+  <section class="card${legal || S.demo ? '' : ' off'}"><h2>${t(S.closing ? 'weekPrev' : 'weekTitle')}</h2>
   ${(S.week || []).map(w => `<div class="wk ${w.has ? '' : 'no'}"><div><b>${esc(fmtWk(w.d))}</b><span class="mut">${w.has ? w.o + ' ' + t('orders') + ' · ' + money(w.s) : '—'}</span></div>
   <span class="wv ${w.done ? 'ok' : w.nb ? 'bad' : ''}">${!w.has ? '—' : w.nb ? t('nbShort') : w.done ? '✓ ' + w.coins : w.can ? CN + '+' + w.coins : w.coins}</span>${w.has && tiers.length ? mini(w.o, tiers) : ''}</div>`).join('')}
   ${(() => { const o = (S.week || []).filter(w => w.nb && w.d !== (S.dataDate || td.d)); return o.length ? `<p class="mut note warn-t">⚠️ ${t('nbNote', { d: o.map(w => fmtWk(w.d)).join(', ') })}</p>` : ''; })()}
@@ -495,7 +508,7 @@ function awardsView() {
 }
 
 function adsView() {
-  const B = S.brand || { car: 'none', uni: 'none', pct: 0, week: [], claimDays: [] }, canApply = !S.demo && !!S.brand;
+  const B = S.brand || { car: 'none', uni: 'none', pct: 0, week: [], claimDays: [] }, canApply = !S.demo && !!S.brand && !!S.legal;
   const bc = (B.claimDays || []).reduce((a, x) => a + x.coins, 0);
   const opt = (k, img, title, desc, st, name) => `<section class="card opt-card ${canApply && st === 'none' ? 'tap' : ''}" ${canApply && st === 'none' ? `data-apply="${k}"` : ''}>
     <div class="opt"><div class="ai"><img src="brand/${img}.webp" width="360" height="270" alt="${esc(name)}" loading="lazy">${st === 'ok' ? '<span class="awb ok">✓</span>' : ''}</div>
@@ -504,6 +517,7 @@ function adsView() {
     ${canApply && st === 'none' ? `<button class="btn keep sm" data-apply="${k}">${t('adsApply')}</button>` : ''}</section>`;
   return `<header><div class="top"><img class="logo" src="maxim-logo.png" alt="maxim">${langSw()}</div><h1>${t('adsTitle')}</h1></header>
   <section class="card"><p class="mut" style="font-size:14px">${t('adsIntro')}</p>${S.demo ? `<p class="mut" style="margin-top:8px"><b>${t('adsDemo')}</b></p>` : ''}</section>
+  ${S.legal || S.demo ? '' : `<section class="warn"><h2>${t('pdlTitle')}</h2><p style="margin:6px 0 0">${t('adsNoPdl')}</p><a href="${PDL_URL}"><button class="btn keep sm">${t('pdlBtn')}</button></a></section>`}
   ${opt('car', 'car', t('adsCarT'), t('adsCarD', { p: B.pct }), B.car, t('nameCar'))}
   ${opt('uni', 'uniform', t('adsUniT'), t('adsUniD'), B.uni, t('nameUni'))}
   ${B.car === 'ok' ? `<section class="card"><h2>${t('brT')}</h2><p class="mut" style="margin:4px 0 6px">${t('brD', { p: B.pct })}</p>
@@ -527,8 +541,38 @@ function rulesView() {
   <p class="mut" style="margin-top:8px">${t('r_fraud')}</p></section>`;
 }
 
+/* ---------- Новичок ---------- */
+let addPrompt = null;
+addEventListener('beforeinstallprompt', e => { e.preventDefault(); addPrompt = e; });
+function newbieRender() {
+  const n = S.newbie; app.className = ''; document.body.classList.remove('off');
+  const T0 = new Date(nowMs() + 7 * 36e5 + 864e5).toISOString().slice(0, 10);      // завтра по Бангкоку
+  const res = n.st === 'Зарезервирован', step = (cls, i, txt) => `<div class="stp ${cls}"><b>${cls === 'dn' ? '✓' : i}</b><span>${txt}</span></div>`;
+  const tx = `<div style="margin:12px 12px 0"><a href="${TAXSEE_URL}" style="text-decoration:none"><button class="btn" style="margin-top:0">${t('nbOpenTx')}</button></a></div>`;
+  const body = res ? `
+  ${n.days > 1 ? `<section class="card nbwarn">${t('nbNoOrders')}</section>` : ''}
+  <section class="card nbres"><span class="lk">${t('nbLocked')}</span><h2>${t('nbResTitle')}</h2>
+  <div class="amt"><i class="coin"></i>${n.coins}</div><p class="mut">${t('nbResText')}</p>
+  <div class="seg">${Array.from({ length: n.total }, (_, i) => `<i class="${i < n.total - n.left ? 'on' : ''}"></i>`).join('')}</div>
+  <p class="mut"><b>${t('nbLeft', { n: n.left + ' ' + t('ud') })}</b></p></section>
+  <section class="card"><h2>${t('nbHow')}</h2>${step('dn', 1, t('nbS0'))}${step('on', 2, t('nbS1'))}${step('', 3, t('nbS2'))}${step('', 4, t('nbS3'))}</section>
+  <section class="card nbback"><b>${t('nbBack', { d: fmtDay(T0) })}</b>
+  <button class="btn keep sm" id="nbadd" style="margin-top:10px">${t('nbAdd')}</button></section>` : `
+  <section class="card"><h2>${t('nbExpT')}</h2><p class="mut" style="margin:4px 0 6px">${t('nbExpText')}</p>${step('on', 1, t('nbE1'))}${step('', 2, t('nbE2'))}${step('', 3, t('nbE3'))}</section>`;
+  app.innerHTML = `<header><div class="top"><img class="logo" src="maxim-logo.png" alt="maxim">${langSw()}</div>
+  <h1>${t('title')}</h1><p><span class="nbtag">${t('nbTag')}</span>•••• ${esc(n.phone)} · ${esc(n.cityName)}</p></header>
+  ${body}${tx}<p class="mut note" style="margin:12px 24px 0;text-align:center">${t('nbFoot')}</p><button class="out" id="out">${t('logout')}</button>`;
+  bindLang();
+  if ($('#nbadd')) $('#nbadd').onclick = async () => {
+    if (addPrompt) { try { addPrompt.prompt(); await addPrompt.userChoice; } catch (e) {} addPrompt = null; }
+    else popup(t('nbAdd'), t('nbAddHow'), 'OK');
+  };
+  $('#out').onclick = () => { ls.del('sess'); ls.del('last'); sess = S = null; document.body.classList.remove('off'); app.className = ''; loginView(); };
+}
+
 function render() {
-  const grey = !S.legal || !!S.demo; app.className = grey ? 'off' : ''; document.body.classList.toggle('off', grey);   // !! — иначе undefined превращает toggle() в переключатель
+  if (S.newbie) return newbieRender();
+  const grey = !!S.demo || (!S.legal && tab === 'ads'); app.className = grey ? 'off' : ''; document.body.classList.toggle('off', grey);   // !! — иначе undefined превращает toggle() в переключатель
   app.innerHTML = (tab === 'home' ? homeView() : tab === 'awards' ? awardsView() : tab === 'ads' ? adsView() : rulesView()) + `<nav>
   <a data-t="home" class="${tab === 'home' ? 'on' : ''}"><span>🏠</span>${t('nHome')}</a>
   <a data-t="awards" class="${tab === 'awards' ? 'on' : ''}"><span>🏆${S.awardClaim > 0 ? '<i class="dot"></i>' : ''}</span>${t('nAwards')}</a>
@@ -541,6 +585,7 @@ function render() {
     try { setState(await call(body)); toast(t(ok)); } catch (e) { toast(errText(emsg(e))); if (e.message === 'Цена изменилась') { try { setState(await call({ a: 'state' })); } catch (e2) {} } }
     busy = false; render();
   };
+  if ($('#nbclaim')) $('#nbclaim').onclick = run({ a: 'claimNewbie' }, 'okClaim', $('#nbclaim'));
   if ($('#claim')) $('#claim').onclick = run({ a: 'claim' }, 'okClaim', $('#claim'));
   if ($('#awclaim')) $('#awclaim').onclick = run({ a: 'claimAwards' }, 'okClaim', $('#awclaim'));
   if ($('#brclaim')) $('#brclaim').onclick = run({ a: 'claimBrand' }, 'okClaim', $('#brclaim'));
